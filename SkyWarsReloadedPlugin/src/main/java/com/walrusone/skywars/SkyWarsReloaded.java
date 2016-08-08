@@ -165,21 +165,19 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
         score = new ScoreboardController();
         
         getCommand("swr").setExecutor(new CmdManager());
-        
+
         getCommand("global").setExecutor(new CommandExecutor() {
-        	
-            @Override
             public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
             	boolean hasPerm = false;
         		if (!(sender instanceof Player)) {
         			hasPerm = true;
-        		} else if (sender instanceof Player) {
+        		} else {
         			Player player = (Player) sender;
         			if (player.hasPermission("swr.global")) {
         				hasPerm = true;
         			} else {
             			sender.sendMessage(new Messaging.MessageFormatter().format("error.cmd-no-perm"));
-        			} 
+        			}
         		}
         		if (hasPerm) {
                     if (args.length == 0) {
@@ -187,7 +185,7 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
                         return true;
                     }
 
-                    Player player = (Player) sender;
+                    Player player = (Player) sender; //TODO fix possible ClassCastException
                     StringBuilder messageBuilder = new StringBuilder();
                     for (String arg : args) {
                         messageBuilder.append(arg);
@@ -201,7 +199,7 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
                         	prefix = SkyWarsReloaded.chat.getPlayerPrefix(gPlayer.getP());
                 	}
                 	String colorMessage = ChatColor.translateAlternateColorCodes('&', messageBuilder.toString());
-                 	String message = "";
+                 	String message;
                 	if (gPlayer.getP().hasPermission("swr.color")) {
                     		message = colorMessage;
                 	} else {
@@ -349,26 +347,6 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
     	}
     }
     
-    public static boolean deleteFolder(File file) {
-        if (file.exists()) {
-            boolean result = true;
-
-            if (file.isDirectory()) {
-                File[] contents = file.listFiles();
-
-                if (contents != null) {
-                    for (File f : contents) {
-                        result = result && deleteFolder(f);
-                    }
-                }
-            }
-
-            return result && file.delete();
-        }
-
-        return false;
-    }
-    
     public boolean loadingEnded() {
     	return finishedStartup;
     }
@@ -467,7 +445,7 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
             chat = chatProvider.getProvider();
         }
     }
-    
+
     @Override
  	public void onPluginMessageReceived(String channel, Player player, byte[] message) {
  		if (!channel.equals("BungeeCord")) {
@@ -485,7 +463,7 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
 				if (game != null) {
 						BungeeUtil.sendSignUpdateRequest(game);
 				} else {
-					System.out.println("Game " + game + " couldn't be found, please fix your setup.");
+					System.out.println("Game from BungeeCord couldn't be found, please fix your setup.");
 				}
  		}
  	}
@@ -493,14 +471,8 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
     private void getSWRDatabase() {
     	try {
 			db = new Database();
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
-    	try {
-			db.createTables();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
+            db.createTables();
+		} catch (ClassNotFoundException | SQLException | IOException e) {
 			e.printStackTrace();
 		}
     	Connection conn = db.getConnection();

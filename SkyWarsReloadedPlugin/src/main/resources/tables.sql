@@ -2,7 +2,7 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 
 CREATE TABLE IF NOT EXISTS `swreloaded_player` (
   `player_id`    INT(6) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `uuid`  VARCHAR(255)     NOT NULL UNIQUE,
+  `uuid`  VARCHAR(36)     NOT NULL UNIQUE,
   `playername`  VARCHAR(60)     NOT NULL,
   `first_seen`   DATETIME        NOT NULL,
   `last_seen`    DATETIME        NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `swreloaded_player` (
 CREATE TABLE IF NOT EXISTS `swreloaded_permissions` (
   `id`    INT(6) UNSIGNED NOT NULL AUTO_INCREMENT,
   `player_id`    INT(6) UNSIGNED NOT NULL,
-  `uuid`  VARCHAR(255)     NOT NULL,
+  `uuid`  VARCHAR(36)     NOT NULL,
   `playername`  VARCHAR(60)     NOT NULL,
   `permissions`  VARCHAR(60)     NOT NULL,
   PRIMARY KEY (`id`),
