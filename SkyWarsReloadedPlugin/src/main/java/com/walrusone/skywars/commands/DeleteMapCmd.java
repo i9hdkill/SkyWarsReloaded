@@ -1,18 +1,17 @@
 package com.walrusone.skywars.commands;
 
-import java.io.File;
-
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.utilities.Messaging;
+import java.io.File;
 
 
-public class DeleteMapCmd extends BaseCmd {
+class DeleteMapCmd extends BaseCmd {
 
-	public DeleteMapCmd() {
+	DeleteMapCmd() {
 		forcePlayer = false;
 		cmdName = "delete";
 		argLength = 2; //counting cmdName

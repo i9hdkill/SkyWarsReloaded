@@ -1,15 +1,14 @@
 package com.walrusone.skywars.commands;
 
-import org.bukkit.ChatColor;
-
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.utilities.ParticleItem;
+import org.bukkit.ChatColor;
 
 
-public class SetProjEffectCmd extends BaseCmd { 
+class SetProjEffectCmd extends BaseCmd {
 	
-	public SetProjEffectCmd() {
+	SetProjEffectCmd() {
 		forcePlayer = false;
 		cmdName = "setprojeffect";
 		argLength = 3; //counting cmdName
@@ -39,7 +38,7 @@ public class SetProjEffectCmd extends BaseCmd {
 				sender.sendMessage(ChatColor.RED + "That is not a valid particle effect. Valid effects are:");
 				StringBuilder effects = new StringBuilder();
 				for (ParticleItem pItem: SkyWarsReloaded.getProjC().getParticleItems()) {
-					effects.append(pItem.getEffect() + ", ");
+					effects.append(pItem.getEffect()).append(", ");
 				}
 				effects.append("normal");
 				String effectList = effects.toString();

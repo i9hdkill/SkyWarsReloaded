@@ -1,5 +1,11 @@
 package com.walrusone.skywars.dataStorage;
 
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.game.GamePlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,13 +17,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.game.GamePlayer;
 
 public class DataStorage {
 
@@ -75,14 +74,12 @@ public class DataStorage {
             PreparedStatement preparedStatement = null;
 
             try {
-            	 StringBuilder queryBuilder = new StringBuilder();
-                 queryBuilder.append("UPDATE `swreloaded_player` SET ");
-                 queryBuilder.append("`playername` = ?, `score` = ?, `games_played` = ?, ");
-                 queryBuilder.append("`games_won` = ?, `kills` = ?, ");
-                 queryBuilder.append("`deaths` = ?, `killdeath` = ?, `blocksplaced` = ?, `last_seen` = NOW(), `balance` = ?, `glasscolor` = ?, `effect` = ?, `traileffect` = ? ");
-                 queryBuilder.append("WHERE `uuid` = ?;");
+            	 String query = "UPDATE `swreloaded_player` SET `playername` = ?, `score` = ?," +
+						 " `games_played` = ?, `games_won` = ?, `kills` = ?, `deaths` = ?, `killdeath` = ?," +
+						 " `blocksplaced` = ?, `last_seen` = NOW(), `balance` = ?, `glasscolor` = ?, `effect` = ?," +
+						 " `traileffect` = ? WHERE `uuid` = ?;";
 
-                 preparedStatement = connection.prepareStatement(queryBuilder.toString());
+                 preparedStatement = connection.prepareStatement(query);
                  preparedStatement.setString(1, player.getName());
                  preparedStatement.setInt(2, player.getScore());
                  preparedStatement.setInt(3, player.getGamesPlayed());
@@ -118,13 +115,9 @@ public class DataStorage {
             preparedStatement = null;
             ResultSet resultSet = null;
                 try {
-                    StringBuilder queryBuilder = new StringBuilder();
-                    queryBuilder.append("SELECT `player_id` ");
-                    queryBuilder.append("FROM `swreloaded_player` ");
-                    queryBuilder.append("WHERE `uuid` = ? ");
-                    queryBuilder.append("LIMIT 1;");
+					String query = "SELECT `player_id` FROM `swreloaded_player` WHERE `uuid` = ? LIMIT 1;";
 
-                    preparedStatement = connection.prepareStatement(queryBuilder.toString());
+					preparedStatement = connection.prepareStatement(query);
                     preparedStatement.setString(1, player.getP().getUniqueId().toString());
                     resultSet = preparedStatement.executeQuery();
 
@@ -154,12 +147,11 @@ public class DataStorage {
                     try {
                     	if (player.getNewPerms().size() >= 1) {
                         	for (String perm: player.getNewPerms()) {
-                        		StringBuilder queryBuilder = new StringBuilder();
-                                queryBuilder.append("INSERT INTO `swreloaded_permissions` ");
-                                queryBuilder.append("(`id`, `player_id`, `uuid`, `playername`, `permissions`) ");
-                                queryBuilder.append("VALUES (NULL, ?, ?, ?, ?) ");
-                                
-                                preparedStatement = connection.prepareStatement(queryBuilder.toString());
+                                String queryBuilder = "INSERT INTO `swreloaded_permissions` " +
+                                        "(`id`, `player_id`, `uuid`, `playername`, `permissions`) " +
+                                        "VALUES (NULL, ?, ?, ?, ?) ";
+
+                                preparedStatement = connection.prepareStatement(queryBuilder);
                                 preparedStatement.setInt(1, playerId);
                                 preparedStatement.setString(2, player.getUUID().toString());
                                 preparedStatement.setString(3, player.getName());
@@ -238,14 +230,14 @@ public class DataStorage {
                 PreparedStatement preparedStatement = null;
 
                 try {
-                    StringBuilder queryBuilder = new StringBuilder();
-                 queryBuilder.append("UPDATE `swreloaded_player` SET ");
-                 queryBuilder.append("`playername` = ?, `score` = ?, `games_played` = ?, ");
-                 queryBuilder.append("`games_won` = ?, `kills` = ?, ");
-                 queryBuilder.append("`deaths` = ?, `killdeath` = ?, `blocksplaced` = ?, `last_seen` = NOW(), `balance` = ?, `glasscolor` = ?, `effect` = ?, `traileffect` = ? ");
-                 queryBuilder.append("WHERE `uuid` = ?;");
+                    String queryBuilder = "UPDATE `swreloaded_player` SET " +
+                            "`playername` = ?, `score` = ?, `games_played` = ?, " +
+                            "`games_won` = ?, `kills` = ?, " +
+                            "`deaths` = ?, `killdeath` = ?, `blocksplaced` = ?, `last_seen` = NOW(), `balance` = ?," +
+                            " `glasscolor` = ?, `effect` = ?, `traileffect` = ? " +
+                            "WHERE `uuid` = ?;";
 
-                 preparedStatement = connection.prepareStatement(queryBuilder.toString());
+                    preparedStatement = connection.prepareStatement(queryBuilder);
                  preparedStatement.setString(1, name);
                  preparedStatement.setInt(2, score);
                  preparedStatement.setInt(3, gamesPlayed);
@@ -280,13 +272,12 @@ public class DataStorage {
                 preparedStatement = null;
                 ResultSet resultSet = null;
                     try {
-                        StringBuilder queryBuilder = new StringBuilder();
-                        queryBuilder.append("SELECT `player_id` ");
-                        queryBuilder.append("FROM `swreloaded_player` ");
-                        queryBuilder.append("WHERE `uuid` = ? ");
-                        queryBuilder.append("LIMIT 1;");
+                        String queryBuilder = "SELECT `player_id` " +
+                                "FROM `swreloaded_player` " +
+                                "WHERE `uuid` = ? " +
+                                "LIMIT 1;";
 
-                        preparedStatement = connection.prepareStatement(queryBuilder.toString());
+                        preparedStatement = connection.prepareStatement(queryBuilder);
                         preparedStatement.setString(1, uuid.toString());
                         resultSet = preparedStatement.executeQuery();
 
@@ -316,12 +307,11 @@ public class DataStorage {
                         try {
                             if (newPermissions.size() >= 1) {
                                 for (String perm: newPermissions) {
-                                    StringBuilder queryBuilder = new StringBuilder();
-                                    queryBuilder.append("INSERT INTO `swreloaded_permissions` ");
-                                    queryBuilder.append("(`id`, `player_id`, `uuid`, `playername`, `permissions`) ");
-                                    queryBuilder.append("VALUES (NULL, ?, ?, ?, ?) ");
+                                    String queryBuilder = "INSERT INTO `swreloaded_permissions` " +
+                                            "(`id`, `player_id`, `uuid`, `playername`, `permissions`) " +
+                                            "VALUES (NULL, ?, ?, ?, ?) ";
 
-                                    preparedStatement = connection.prepareStatement(queryBuilder.toString());
+                                    preparedStatement = connection.prepareStatement(queryBuilder);
                                     preparedStatement.setInt(1, playerId);
                                     preparedStatement.setString(2, uuid.toString());
                                     preparedStatement.setString(3, name);
@@ -368,13 +358,13 @@ public class DataStorage {
                     ResultSet resultSet = null;
 
                     try {
-                        StringBuilder queryBuilder = new StringBuilder();
-                        queryBuilder.append("SELECT `score`, `games_played`, `games_won`, `kills`, `deaths`, `blocksplaced`, `balance`, `glasscolor`, `effect`, `traileffect` ");
-                        queryBuilder.append("FROM `swreloaded_player` ");
-                        queryBuilder.append("WHERE `uuid` = ? ");
-                        queryBuilder.append("LIMIT 1;");
+                        String queryBuilder = "SELECT `score`, `games_played`, `games_won`, `kills`, `deaths`," +
+                                " `blocksplaced`, `balance`, `glasscolor`, `effect`, `traileffect` " +
+                                "FROM `swreloaded_player` " +
+                                "WHERE `uuid` = ? " +
+                                "LIMIT 1;";
 
-                        preparedStatement = connection.prepareStatement(queryBuilder.toString());
+                        preparedStatement = connection.prepareStatement(queryBuilder);
                         preparedStatement.setString(1, player.getUUID().toString());
                         resultSet = preparedStatement.executeQuery();
 
@@ -434,12 +424,9 @@ public class DataStorage {
                     ResultSet resultSet = null;
 
                     try {
-                        StringBuilder queryBuilder = new StringBuilder();
-                        queryBuilder.append("SELECT `permissions` ");
-                        queryBuilder.append("FROM `swreloaded_permissions` ");
-                        queryBuilder.append("WHERE `uuid` = ?;");
+                        String query = "SELECT `permissions` FROM `swreloaded_permissions` WHERE `uuid` = ?;";
 
-                        preparedStatement = connection.prepareStatement(queryBuilder.toString());
+                        preparedStatement = connection.prepareStatement(query);
                         preparedStatement.setString(1, player.getUUID().toString());
                         resultSet = preparedStatement.executeQuery();
 

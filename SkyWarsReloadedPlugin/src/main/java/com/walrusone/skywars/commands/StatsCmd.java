@@ -1,17 +1,16 @@
 package com.walrusone.skywars.commands;
 
-import java.util.HashMap;
-
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.utilities.Messaging;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
-public class StatsCmd extends BaseCmd { 
+import java.util.HashMap;
 
-	public StatsCmd() {
+class StatsCmd extends BaseCmd {
+
+	StatsCmd() {
 		forcePlayer = true;
 		cmdName = "stats";
 		argLength = 1; //counting cmdName
@@ -19,7 +18,7 @@ public class StatsCmd extends BaseCmd {
 		desc = ":: View your skywars stats";
 
 	}
-	private HashMap<Player, Long> cooldown = new HashMap<Player, Long>();
+	private HashMap<Player, Long> cooldown = new HashMap<>();
 	
 	@Override
 	public boolean run() {

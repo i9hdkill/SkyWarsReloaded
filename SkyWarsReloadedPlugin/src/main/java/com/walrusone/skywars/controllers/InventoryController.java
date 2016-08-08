@@ -1,7 +1,6 @@
 package com.walrusone.skywars.controllers;
 
 import com.walrusone.skywars.SkyWarsReloaded;
-
 import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,7 +16,7 @@ import java.util.Map;
 
 public class InventoryController {
 
-    private Map<String, pInventory> inventories = new HashMap<String, pInventory>();
+    private Map<String, pInventory> inventories = new HashMap<>();
     
 	public InventoryController() {
         load();
@@ -25,7 +24,7 @@ public class InventoryController {
 
     @SuppressWarnings("unchecked")
 	public void load() {
-        inventories = new HashMap<String, pInventory>();
+        inventories = new HashMap<>();
         try {
         	 File dataDirectory = SkyWarsReloaded.get().getDataFolder();
              File playerDataDirectory = new File(dataDirectory, "player_data");
@@ -51,7 +50,7 @@ public class InventoryController {
 						inventories.put(uuid, new pInventory(content, armor, level, exp, gamemode));
          			}
          		}
-                 playerInventories.delete();
+                 playerInventories.delete(); //TODO acknowledge the result
              } else {
             	 
             	 File playerInventoriesNew = new File(dataDirectory, "inventories.yml");
@@ -119,11 +118,8 @@ public class InventoryController {
     }
     
     public boolean playerExists(String uuid) {
-    	if (inventories.containsKey(uuid)) {
-    		return true;
-    	}
-    	return false;
-    }
+		return inventories.containsKey(uuid);
+	}
     
     public void restoreInventory(Player player) {
     	if (player != null) {
@@ -154,7 +150,7 @@ public class InventoryController {
     	private GameMode gameMode;
     	private int level;
     	
-    	public pInventory(ItemStack[] content, ItemStack[] armor, int l, float f, GameMode gameMode) {
+    	pInventory(ItemStack[] content, ItemStack[] armor, int l, float f, GameMode gameMode) {
     		this.content = content;
     		this.armor = armor;
     		level = l;
@@ -162,23 +158,23 @@ public class InventoryController {
     		this.gameMode = gameMode;
     	}
     	
-    	public ItemStack[] getContent() {
+    	ItemStack[] getContent() {
     		return content;
     	}
     	
-    	public ItemStack[] getArmor() {
+    	ItemStack[] getArmor() {
     		return armor;
     	}
     	
-    	public int getLevel() {
+    	int getLevel() {
     		return level;
     	}
     	
-    	public float getExp() {
+    	float getExp() {
     		return exp;
     	}
     	
-    	public GameMode getGameMode() {
+    	GameMode getGameMode() {
     		return gameMode;
     	}
     }

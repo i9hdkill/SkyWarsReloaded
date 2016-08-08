@@ -1,13 +1,13 @@
 package com.walrusone.skywars.commands;
 
-import java.io.File;
-
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.utilities.Messaging;
 
-public class RegisterMapCmd extends BaseCmd { 
+import java.io.File;
+
+class RegisterMapCmd extends BaseCmd {
 	
-	public RegisterMapCmd() {
+	RegisterMapCmd() {
 		forcePlayer = false;
 		cmdName = "register";
 		argLength = 2; //counting cmdName

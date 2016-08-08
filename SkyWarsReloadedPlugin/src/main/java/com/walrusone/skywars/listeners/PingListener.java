@@ -1,12 +1,11 @@
 package com.walrusone.skywars.listeners;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.server.ServerListPingEvent;
-
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.Game;
 import com.walrusone.skywars.game.Game.GameState;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.ServerListPingEvent;
 
 public class PingListener implements Listener {
 

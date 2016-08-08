@@ -1,19 +1,18 @@
 package com.walrusone.skywars.commands;
 
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.game.Game;
+import com.walrusone.skywars.game.Game.GameState;
+import com.walrusone.skywars.game.GamePlayer;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.game.Game;
-import com.walrusone.skywars.game.GamePlayer;
-import com.walrusone.skywars.game.Game.GameState;
-import com.walrusone.skywars.utilities.Messaging;
 
+class JoinGameCmd extends BaseCmd {
 
-public class JoinGameCmd extends BaseCmd { 
-
-	public JoinGameCmd() {
+	JoinGameCmd() {
 		forcePlayer = true;
 		cmdName = "join";
 		argLength = 1; //counting cmdName

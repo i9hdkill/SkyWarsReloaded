@@ -1,7 +1,8 @@
 package com.walrusone.skywars.controllers;
 
-import java.text.DecimalFormat;
-
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.game.GamePlayer;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -9,9 +10,7 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.game.GamePlayer;
-import com.walrusone.skywars.utilities.Messaging;
+import java.text.DecimalFormat;
 
 public class ScoreboardController {
  
@@ -30,7 +29,7 @@ public class ScoreboardController {
 				
 				double money;
 		        if (SkyWarsReloaded.getCfg().usingExternalEcomony()) {
-		            money = (double) SkyWarsReloaded.econ.getBalance(player); 
+		            money = SkyWarsReloaded.econ.getBalance(player);
 		        } else {
 		        	money = (double) gPlayer.getBalance();
 		        }
@@ -61,10 +60,8 @@ public class ScoreboardController {
 			        killsScore.setScore(gPlayer.getKills());
 			        Score gamesScore = stats.getScore(gamesPlayed);
 			        gamesScore.setScore(gPlayer.getGamesPlayed());
-		            if (player != null) {
-		    	        player.setScoreboard(board); 
-		            }
-		    	} else {
+					player.setScoreboard(board);
+				} else {
 			        String moneyValue = new Messaging.MessageFormatter().setVariable("value", df.format(money)).format("scoreboard.money");
 					String kdValue = new Messaging.MessageFormatter().setVariable("value", df.format(kd)).format("scoreboard.kd");
 			        String score = new Messaging.MessageFormatter().setVariable("value", "" + gPlayer.getScore()).format("scoreboard.score");
@@ -92,11 +89,10 @@ public class ScoreboardController {
 			        gamesScore.setScore(2);
 		            Score kdScore = stats.getScore(kdValue); 
 		            kdScore.setScore(1);
-		            if (player != null) {
-		    	        player.setScoreboard(board); 
-		            }
-		    	}
+					player.setScoreboard(board);
+				}
 			} catch (NullPointerException e) {
+				e.printStackTrace();
 			}
 			
 		}

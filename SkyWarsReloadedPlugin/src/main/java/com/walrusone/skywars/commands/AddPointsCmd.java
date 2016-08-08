@@ -1,15 +1,14 @@
 package com.walrusone.skywars.commands;
 
-import org.bukkit.ChatColor;
-
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.utilities.Util;
+import org.bukkit.ChatColor;
 
 
-public class AddPointsCmd extends BaseCmd { 
+class AddPointsCmd extends BaseCmd {
 	
-	public AddPointsCmd() {
+	AddPointsCmd() {
 		forcePlayer = false;
 		cmdName = "addpoints";
 		argLength = 3; //counting cmdName

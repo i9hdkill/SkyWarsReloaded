@@ -1,17 +1,16 @@
 package com.walrusone.skywars.commands;
 
-import org.bukkit.ChatColor;
-
 import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.game.Game.GameState;
+import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.menus.ShopMenu;
 import com.walrusone.skywars.menus.SpecShopMenu;
 import com.walrusone.skywars.utilities.Messaging;
+import org.bukkit.ChatColor;
 
-public class ShopCmd extends BaseCmd { 
+class ShopCmd extends BaseCmd {
 	
-	public ShopCmd() {
+	ShopCmd() {
 		forcePlayer = true;
 		cmdName = "shop";
 		argLength = 1; //counting cmdName

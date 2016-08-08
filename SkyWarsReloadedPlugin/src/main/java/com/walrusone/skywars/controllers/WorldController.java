@@ -1,5 +1,15 @@
 package com.walrusone.skywars.controllers;
 
+import com.walrusone.skywars.SkyWarsReloaded;
+import org.bukkit.Difficulty;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.block.Block;
+import org.bukkit.generator.BlockPopulator;
+import org.bukkit.generator.ChunkGenerator;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,17 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-import org.bukkit.Difficulty;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
-import org.bukkit.block.Block;
-import org.bukkit.generator.BlockPopulator;
-import org.bukkit.generator.ChunkGenerator;
-
-import com.walrusone.skywars.SkyWarsReloaded;
 
 public class WorldController {
 
@@ -87,7 +86,7 @@ public class WorldController {
             public boolean canSpawn(World world, int x, int z) {
                 return true;
             }
-            
+
             @Override
             public byte[] generate(World world, Random random, int x, int z) {
                 return new byte[32768];
@@ -138,11 +137,11 @@ public class WorldController {
 
 	public void copyWorld(File source, File target){
 	    try {
-	        ArrayList<String> ignore = new ArrayList<String>(Arrays.asList("uid.dat", "session.dat"));
+	        ArrayList<String> ignore = new ArrayList<>(Arrays.asList("uid.dat", "session.dat"));
 	        if(!ignore.contains(source.getName())) {
 	            if(source.isDirectory()) {
 	                if(!target.exists())
-	                target.mkdirs();
+	                target.mkdirs(); //TODO check for success of creation
 	                String files[] = source.list();
 	                for (String file : files) {
 	                    File srcFile = new File(source, file);
@@ -161,7 +160,7 @@ public class WorldController {
 	            }
 	        }
 	    } catch (IOException e) {
-	 
+	        e.printStackTrace();
 	    }
 	}
 	
@@ -174,14 +173,16 @@ public class WorldController {
 	public boolean deleteWorld(File path) {
 	      if(path.exists()) {
 	          File files[] = path.listFiles();
-	          for(int i=0; i<files.length; i++) {
-	              if(files[i].isDirectory()) {
-	                  deleteWorld(files[i]);
-	              } else {
-	                  files[i].delete();
-	              }
-	          }
-	      }
+              if (files != null) {
+                  for (File file : files) {
+                      if (file.isDirectory()) {
+                          deleteWorld(file);
+                      } else {
+                          file.delete();
+                      }
+                  }
+              }
+          }
 	      return(path.delete());
 	}
 	

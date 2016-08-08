@@ -1,16 +1,15 @@
 package com.walrusone.skywars.commands;
 
-import org.bukkit.Location;
-
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.menus.LobbyMainMenu;
 import com.walrusone.skywars.menus.MainMenu;
 import com.walrusone.skywars.utilities.Messaging;
+import org.bukkit.Location;
 
-public class MenuGuiCmd extends BaseCmd { 
+class MenuGuiCmd extends BaseCmd {
 
-	public MenuGuiCmd() {
+	MenuGuiCmd() {
 		forcePlayer = true;
 		cmdName = "menu";
 		argLength = 1; //counting cmdName

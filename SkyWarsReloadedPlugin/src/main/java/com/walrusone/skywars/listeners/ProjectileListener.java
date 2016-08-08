@@ -1,5 +1,7 @@
 package com.walrusone.skywars.listeners;
 
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.game.GamePlayer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
@@ -8,9 +10,6 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.game.GamePlayer;
 
 public class ProjectileListener implements Listener {
 

@@ -1,11 +1,10 @@
 package com.walrusone.skywars.commands;
 
+import com.walrusone.skywars.utilities.Messaging;
+import com.walrusone.skywars.utilities.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import com.walrusone.skywars.utilities.Messaging;
-import com.walrusone.skywars.utilities.Util;
 
 public abstract class BaseCmd {
 
@@ -23,7 +22,7 @@ public abstract class BaseCmd {
 	public Player player;
 	public String desc = "";
 
-	public boolean processCmd(CommandSender s, String[] arg) {
+	boolean processCmd(CommandSender s, String[] arg) {
 		sender = s;
 		args = arg;
 
@@ -47,7 +46,7 @@ public abstract class BaseCmd {
 	public abstract boolean run();
 	
 	
-	public String helper() {
+	String helper() {
 		return ChatColor.RED + cmdName + " " + usage + " "+ ChatColor.GRAY + desc;
 	}
 }

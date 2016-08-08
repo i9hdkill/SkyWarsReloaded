@@ -1,12 +1,12 @@
 package com.walrusone.skywars.controllers;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Map;
-
 import com.google.common.collect.Maps;
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GameMap;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class MapController {
 
@@ -14,7 +14,7 @@ public class MapController {
 	private File maps;
 	private File rootDirectory;
 	private final Map<String, GameMap> mapList = Maps.newHashMap();
-	private ArrayList<String> editMaps = new ArrayList<String>();
+	private ArrayList<String> editMaps = new ArrayList<>();
 	
 	public MapController() {
 		dataDirectory = SkyWarsReloaded.get().getDataFolder();
@@ -22,7 +22,7 @@ public class MapController {
 		String root = SkyWarsReloaded.get().getServer().getWorldContainer().getAbsolutePath();
 		rootDirectory = new File(root);
 		if (maps.exists() && maps.isDirectory()) {
-			for (File map : maps.listFiles()) {
+			for (File map : maps.listFiles()) { //TODO ensure NPE is handled
 				if (map.isDirectory()) {
 					registerMap(map.getName());
 					editMaps.add(map.getName().toLowerCase());
@@ -61,7 +61,7 @@ public class MapController {
 			} else {
 		  		if (name.equalsIgnoreCase("lobby")) {
 		  			SkyWarsReloaded.get().getLogger().info("Could Not Register Map: " + name + " - Map must have at least 1 Spawn Point!");
-		  			result = false;;
+		  			result = false;
 		  		} else {
 		  			SkyWarsReloaded.get().getLogger().info("Could Not Register Map: " + name + " - Map must have at least 2 Spawn Points");
 		  			result = false;
@@ -80,7 +80,7 @@ public class MapController {
 	}
 	
 	public ArrayList<GameMap> getRegisteredMaps() {
-		return new ArrayList<GameMap>(mapList.values());
+		return new ArrayList<>(mapList.values());
 	}
 	
 	public void removeMap(String name){
@@ -88,7 +88,7 @@ public class MapController {
 	}
 
 	public ArrayList<String> getMaps() {
-		return new ArrayList<String>(mapList.keySet());
+		return new ArrayList<>(mapList.keySet());
 	}
 	
 	public void addEditMap(String name) {
@@ -104,17 +104,11 @@ public class MapController {
 	}
 	
 	public boolean mapExists(String name) {
-		if (editMaps.contains(name.toLowerCase())) {
-			return true;
-		}
-		return false;
+		return editMaps.contains(name.toLowerCase());
 	}
 	
 	public boolean mapRegistered(String name) {
-		if (mapList.containsKey(name.toLowerCase())) {
-			return true;
-		}
-		return false;
+		return mapList.containsKey(name.toLowerCase());
 	}
 	
 }

@@ -1,21 +1,19 @@
 package com.walrusone.skywars.commands;
 
 
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.walrusone.skywars.utilities.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import com.walrusone.skywars.utilities.Util;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CmdManager implements CommandExecutor {
 
-	private List<BaseCmd> cmds = new ArrayList<BaseCmd>();
+	private List<BaseCmd> cmds = new ArrayList<>();
 
 	//Add New Commands Here
 	public CmdManager() {
@@ -56,7 +54,9 @@ public class CmdManager implements CommandExecutor {
 				if (Util.hp(s, cmd.cmdName)) s.sendMessage(ChatColor.GRAY + "- " + ChatColor.RED + "/swr " + cmd.helper());
 			}
 			s.sendMessage(ChatColor.GRAY + "-----------------------------------------------------");
-		} else getCommands(args[0]).processCmd(s, args);
+		} else {
+			getCommands(args[0]).processCmd(s, args); //TODO ensure NPE is handled
+		}
 		return true;
 	}
 

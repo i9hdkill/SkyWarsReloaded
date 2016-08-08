@@ -1,120 +1,91 @@
 package com.walrusone.skywars.menus;
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.game.Game;
+import com.walrusone.skywars.game.Game.GameState;
+import com.walrusone.skywars.game.GamePlayer;
+import com.walrusone.skywars.utilities.IconMenu;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.google.common.collect.Lists;
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.game.Game;
-import com.walrusone.skywars.game.GamePlayer;
-import com.walrusone.skywars.game.Game.GameState;
-import com.walrusone.skywars.utilities.IconMenu;
-import com.walrusone.skywars.utilities.Messaging;
+import java.util.List;
 
-public class WeatherMenu {
+class WeatherMenu {
 
 	private static final int menuSlotsPerRow = 9;
     private static final int menuSize = 36;
     private static final String weatherMenuName = new Messaging.MessageFormatter().format("menu.weather-menu-title");
     
-    public WeatherMenu(final GamePlayer gamePlayer) {
+    WeatherMenu(final GamePlayer gamePlayer) {
     	
         int rowCount = menuSlotsPerRow;
         while (rowCount < 36 && rowCount < menuSize) {
             rowCount += menuSlotsPerRow;
         }
 
-        SkyWarsReloaded.getIC().create(gamePlayer.getP(), weatherMenuName, rowCount, new IconMenu.OptionClickEventHandler() {
-            @Override
-            public void onOptionClick(IconMenu.OptionClickEvent event) {    
-                String vote = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', event.getName()));
+        SkyWarsReloaded.getIC().create(gamePlayer.getP(), weatherMenuName, rowCount, event -> {
+            String vote = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', event.getName()));
 
-                if (gamePlayer.getGame().getState() != GameState.PREGAME) {
-                	return;
+            if (gamePlayer.getGame().getState() != GameState.PREGAME) {
+                return;
+            }
+
+            if (!hasWeatherPermission(event.getPlayer())) {
+                return;
+            }
+
+            event.setWillClose(false);
+            event.setWillDestroy(false);
+
+            int lastVote = gamePlayer.getTimeVote();
+
+            if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.weather-sunny"))))) {
+                gamePlayer.setWeatherVote(1);
+                gamePlayer.getP().closeInventory();
+                if (gamePlayer.getGame().getState() == GameState.PREGAME) {
+                    SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new MainMenu(gamePlayer), 2);
                 }
-                
-            	if (!hasWeatherPermission(event.getPlayer())) {
-                    return;
-            	}
-            	
-                event.setWillClose(false);
-                event.setWillDestroy(false);
-                                
-                int lastVote = gamePlayer.getTimeVote();
-                
-                if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.weather-sunny"))))) {
-                	gamePlayer.setWeatherVote(1);
-                	gamePlayer.getP().closeInventory();
-                	if (gamePlayer.getGame().getState() == GameState.PREGAME) {
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new MainMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	}
-                } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.weather-rain"))))) {
-                	gamePlayer.setWeatherVote(2);
-                	gamePlayer.getP().closeInventory();
-                	if (gamePlayer.getGame().getState() == GameState.PREGAME) {
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new MainMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	}
-                } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.weather-thunder"))))) {
-                	gamePlayer.setWeatherVote(3);
-                	gamePlayer.getP().closeInventory();
-                	if (gamePlayer.getGame().getState() == GameState.PREGAME) {
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new MainMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	}
-                } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.weather-snow"))))) {
-                	gamePlayer.setWeatherVote(4);
-                	gamePlayer.getP().closeInventory();
-                	if (gamePlayer.getGame().getState() == GameState.PREGAME) {
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new MainMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	}
-                } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.return-to-options"))))) {
-                	gamePlayer.getP().closeInventory();
-                	if (gamePlayer.getGame().getState() == GameState.PREGAME) {
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new MainMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	}
+            } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.weather-rain"))))) {
+                gamePlayer.setWeatherVote(2);
+                gamePlayer.getP().closeInventory();
+                if (gamePlayer.getGame().getState() == GameState.PREGAME) {
+                    SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new MainMenu(gamePlayer), 2);
                 }
-                
-                if (gamePlayer.getWeatherVote() != lastVote) {
-                	Game game = gamePlayer.getGame();
-                	for (GamePlayer gPlayer: game.getPlayers()) {
-                		if (gPlayer.getP() != null) {
-                    		gPlayer.getP().sendMessage(new Messaging.MessageFormatter()
-        					.withPrefix()
-        					.setVariable("player", gamePlayer.getName())
-        					.setVariable("time", vote.toUpperCase())
-        					.format("game.voted-for-time"));
-                		}
-                	}
-                	gamePlayer.getGame().playSound(SkyWarsReloaded.getCfg().getWeatherVoteSound());
+            } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.weather-thunder"))))) {
+                gamePlayer.setWeatherVote(3);
+                gamePlayer.getP().closeInventory();
+                if (gamePlayer.getGame().getState() == GameState.PREGAME) {
+                    SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new MainMenu(gamePlayer), 2);
                 }
+            } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.weather-snow"))))) {
+                gamePlayer.setWeatherVote(4);
+                gamePlayer.getP().closeInventory();
+                if (gamePlayer.getGame().getState() == GameState.PREGAME) {
+                    SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new MainMenu(gamePlayer), 2);
+                }
+            } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.return-to-options"))))) {
+                gamePlayer.getP().closeInventory();
+                if (gamePlayer.getGame().getState() == GameState.PREGAME) {
+                    SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new MainMenu(gamePlayer), 2);
+                }
+            }
+
+            if (gamePlayer.getWeatherVote() != lastVote) {
+                Game game = gamePlayer.getGame();
+                for (GamePlayer gPlayer: game.getPlayers()) {
+                    if (gPlayer.getP() != null) {
+                        gPlayer.getP().sendMessage(new Messaging.MessageFormatter()
+                        .withPrefix()
+                        .setVariable("player", gamePlayer.getName())
+                        .setVariable("time", vote.toUpperCase())
+                        .format("game.voted-for-time"));
+                    }
+                }
+                gamePlayer.getGame().playSound(SkyWarsReloaded.getCfg().getWeatherVoteSound());
             }
         });
 
@@ -180,7 +151,7 @@ public class WeatherMenu {
     	}
     }
     
-    public boolean hasWeatherPermission(Player player) {
+    private boolean hasWeatherPermission(Player player) {
         return player.isOp() || player.hasPermission("swr.weathervote");
     }
     

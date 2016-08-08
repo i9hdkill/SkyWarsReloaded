@@ -1,20 +1,19 @@
 package com.walrusone.skywars.commands;
 
-import java.io.File;
-
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.utilities.Messaging;
+import java.io.File;
 
 
-public class EditMapCmd extends BaseCmd { 
+class EditMapCmd extends BaseCmd {
 
-	public EditMapCmd() {
+	EditMapCmd() {
 		forcePlayer = true;
 		cmdName = "edit";
 		argLength = 2; //counting cmdName
@@ -55,12 +54,10 @@ public class EditMapCmd extends BaseCmd {
 				SkyWarsReloaded.getWC().copyWorld(source, target);
 				boolean loaded = SkyWarsReloaded.getWC().loadWorld(worldName);
 				if (loaded) {
-					SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-						public void run() {
-							World editWorld = SkyWarsReloaded.get().getServer().getWorld(worldName);
-							player.teleport(new Location(editWorld, 0, 21, 0), TeleportCause.PLUGIN);
-						}
-					}, 20);
+					SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> {
+                        World editWorld = SkyWarsReloaded.get().getServer().getWorld(worldName);
+                        player.teleport(new Location(editWorld, 0, 21, 0), TeleportCause.PLUGIN);
+                    }, 20);
 				} else {
 					player.sendMessage(ChatColor.RED + "WORLD FAILED TO LOADED");
 				}

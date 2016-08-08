@@ -3,7 +3,6 @@ package com.walrusone.skywars.controllers;
 import com.google.common.collect.Lists;
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.utilities.ItemUtils;
-
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,8 +25,8 @@ public class ChestController {
     private final List<ChestItem> basicChestItemList = Lists.newArrayList();
     private final Random random = new Random();
    
-    private List<Integer> randomLoc = new ArrayList<Integer>();
-    private List<Integer> randomDLoc = new ArrayList<Integer>();
+    private List<Integer> randomLoc = new ArrayList<>();
+    private List<Integer> randomDLoc = new ArrayList<>();
 
 
     public ChestController() {
@@ -53,7 +52,7 @@ public class ChestController {
 
             if (storage.contains("items")) {
                 for (String item : storage.getStringList("items")) {
-                    List<String> itemData = new LinkedList<String>(Arrays.asList(item.split(" ")));
+                    List<String> itemData = new LinkedList<>(Arrays.asList(item.split(" ")));
 
                     int chance = Integer.parseInt(itemData.get(0));
                     itemData.remove(itemData.get(0));
@@ -80,7 +79,7 @@ public class ChestController {
 
             if (storage.contains("items")) {
                 for (String item : storage.getStringList("items")) {
-                    List<String> itemData = new LinkedList<String>(Arrays.asList(item.split(" ")));
+                    List<String> itemData = new LinkedList<>(Arrays.asList(item.split(" ")));
 
                     int chance = Integer.parseInt(itemData.get(0));
                     itemData.remove(itemData.get(0));
@@ -107,7 +106,7 @@ public class ChestController {
 
             if (storage.contains("items")) {
                 for (String item : storage.getStringList("items")) {
-                    List<String> itemData = new LinkedList<String>(Arrays.asList(item.split(" ")));
+                    List<String> itemData = new LinkedList<>(Arrays.asList(item.split(" ")));
 
                     int chance = Integer.parseInt(itemData.get(0));
                     itemData.remove(itemData.get(0));
@@ -231,7 +230,7 @@ public class ChestController {
         private ItemStack item;
         private int chance;
 
-        public ChestItem(ItemStack item, int chance) {
+        ChestItem(ItemStack item, int chance) {
             this.item = item;
             this.chance = chance;
         }
@@ -240,7 +239,7 @@ public class ChestController {
             return item;
         }
 
-        public int getChance() {
+        int getChance() {
             return chance;
         }
     }

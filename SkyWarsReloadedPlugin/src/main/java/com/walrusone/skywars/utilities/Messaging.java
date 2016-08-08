@@ -2,18 +2,13 @@ package com.walrusone.skywars.utilities;
 
 import com.google.common.collect.Maps;
 import com.walrusone.skywars.SkyWarsReloaded;
-
 import com.walrusone.skywars.dataStorage.DataStorage;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
-import javax.xml.crypto.Data;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

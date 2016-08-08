@@ -1,21 +1,20 @@
 package com.walrusone.skywars.game;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.utilities.ItemUtils;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
-import com.google.common.collect.Lists;
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.utilities.ItemUtils;
-import com.walrusone.skywars.utilities.Messaging;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class GameKit {
 
@@ -64,6 +63,7 @@ public class GameKit {
            	try {
 					storage.save(kit);
 				} catch (IOException e) {
+                    e.printStackTrace();
 				}
            }
            
@@ -75,6 +75,7 @@ public class GameKit {
           	try {
 					storage.save(kit);
 				} catch (IOException e) {
+                    e.printStackTrace();
 				}
           }
             

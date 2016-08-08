@@ -1,9 +1,11 @@
 package com.walrusone.skywars.listeners;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
-
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.game.Game;
+import com.walrusone.skywars.game.GamePlayer;
+import com.walrusone.skywars.menus.SpecPlayerMenu;
+import com.walrusone.skywars.menus.SpecShopMenu;
+import com.walrusone.skywars.utilities.Messaging;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -46,12 +48,9 @@ import org.bukkit.material.Gate;
 import org.bukkit.material.TrapDoor;
 import org.bukkit.util.Vector;
 
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.game.Game;
-import com.walrusone.skywars.game.GamePlayer;
-import com.walrusone.skywars.menus.SpecPlayerMenu;
-import com.walrusone.skywars.menus.SpecShopMenu;
-import com.walrusone.skywars.utilities.Messaging;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class SpectatorListener implements Listener {
 
@@ -99,15 +98,15 @@ public class SpectatorListener implements Listener {
 	@EventHandler
 	protected void onEntityDamageEvent(final EntityDamageByEntityEvent e) {		
 		if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
-			if ((!e.getDamager().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(((Player) e.getDamager()).getUniqueId()).isSpectating()) || (!e.getEntity().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(((Player) e.getEntity()).getUniqueId()).isSpectating())) {
+			if ((!e.getDamager().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(e.getDamager().getUniqueId()).isSpectating()) || (!e.getEntity().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(e.getEntity().getUniqueId()).isSpectating())) {
 				e.setCancelled(true);
 			}
 		} else if (!(e.getEntity() instanceof Player) && e.getDamager() instanceof Player) {
-			if (!e.getDamager().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(((Player) e.getDamager()).getUniqueId()).isSpectating()) {
+			if (!e.getDamager().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(e.getDamager().getUniqueId()).isSpectating()) {
 				e.setCancelled(true);
 			}
 		} else if (e.getEntity() instanceof Player && !(e.getDamager() instanceof Player)) {
-			if (!e.getEntity().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(((Player) e.getEntity()).getUniqueId()).isSpectating()) {
+			if (!e.getEntity().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(e.getEntity().getUniqueId()).isSpectating()) {
 				e.setCancelled(true);
 			}
 		}
@@ -116,7 +115,7 @@ public class SpectatorListener implements Listener {
 				&& !(e.getDamager() instanceof ThrownPotion)
 				&& e.getEntity() instanceof Player
 				&& !e.getEntity().hasMetadata("NPC")
-				&& SkyWarsReloaded.getPC().getPlayer(((Player) e.getEntity()).getUniqueId()).isSpectating()) {
+				&& SkyWarsReloaded.getPC().getPlayer(e.getEntity().getUniqueId()).isSpectating()) {
 			
 			e.setCancelled(true);
 			e.getDamager().remove();
@@ -135,37 +134,31 @@ public class SpectatorListener implements Listener {
 				spectatorInvolved.setFlying(true);
 				spectatorInvolved.teleport(initialSpectatorLocation.clone().add(0, 6, 0), TeleportCause.PLUGIN);
 				
-				Bukkit.getScheduler().runTaskLater(SkyWarsReloaded.get(), new Runnable() {
-					@Override
-					public void run() {
-						if (proj instanceof Arrow) {
-							Arrow arrow = initialProjectileLocation.getWorld().spawn(initialProjectileLocation, Arrow.class);
-							arrow.setBounce(false);
-							arrow.setVelocity(initialProjectileVelocity);
-							arrow.setShooter(proj.getShooter());
-						} else if (proj instanceof Snowball) {
-							Snowball snowball = initialProjectileLocation.getWorld().spawn(initialProjectileLocation, Snowball.class);
-							snowball.setVelocity(initialProjectileVelocity); 
-							snowball.setShooter(proj.getShooter());
-						} else if (proj instanceof Egg) {
-							Egg egg = initialProjectileLocation.getWorld().spawn(initialProjectileLocation, Egg.class);
-							egg.setVelocity(initialProjectileVelocity); 
-							egg.setShooter(proj.getShooter());
-						} else if (proj instanceof EnderPearl) {
-							Player p = (Player) proj.getShooter();
-							p.launchProjectile(EnderPearl.class, initialProjectileVelocity);
-						}
-					}
-				}, 1L);
+				Bukkit.getScheduler().runTaskLater(SkyWarsReloaded.get(), () -> {
+                    if (proj instanceof Arrow) {
+                        Arrow arrow = initialProjectileLocation.getWorld().spawn(initialProjectileLocation, Arrow.class);
+                        arrow.setBounce(false);
+                        arrow.setVelocity(initialProjectileVelocity);
+                        arrow.setShooter(proj.getShooter());
+                    } else if (proj instanceof Snowball) {
+                        Snowball snowball = initialProjectileLocation.getWorld().spawn(initialProjectileLocation, Snowball.class);
+                        snowball.setVelocity(initialProjectileVelocity);
+                        snowball.setShooter(proj.getShooter());
+                    } else if (proj instanceof Egg) {
+                        Egg egg = initialProjectileLocation.getWorld().spawn(initialProjectileLocation, Egg.class);
+                        egg.setVelocity(initialProjectileVelocity);
+                        egg.setShooter(proj.getShooter());
+                    } else if (proj instanceof EnderPearl) {
+                        Player p = (Player) proj.getShooter();
+                        p.launchProjectile(EnderPearl.class, initialProjectileVelocity);
+                    }
+                }, 1L);
 				
-				Bukkit.getScheduler().runTaskLater(SkyWarsReloaded.get(), new Runnable() {
-					@Override
-					public void run() {
-						spectatorInvolved.teleport(new Location(initialSpectatorLocation.getWorld(), initialSpectatorLocation.getX(), initialSpectatorLocation.getY(), initialSpectatorLocation.getZ(), spectatorInvolved.getLocation().getYaw(), spectatorInvolved.getLocation().getPitch()), TeleportCause.PLUGIN);
-						spectatorInvolved.setAllowFlight(true);
-						spectatorInvolved.setFlying(wasFlying);
-					}
-				}, 5L);
+				Bukkit.getScheduler().runTaskLater(SkyWarsReloaded.get(), () -> {
+                    spectatorInvolved.teleport(new Location(initialSpectatorLocation.getWorld(), initialSpectatorLocation.getX(), initialSpectatorLocation.getY(), initialSpectatorLocation.getZ(), spectatorInvolved.getLocation().getYaw(), spectatorInvolved.getLocation().getPitch()), TeleportCause.PLUGIN);
+                    spectatorInvolved.setAllowFlight(true);
+                    spectatorInvolved.setFlying(wasFlying);
+                }, 5L);
 			}
 		}
 	}
@@ -173,10 +166,10 @@ public class SpectatorListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	protected void onPotionSplash(final PotionSplashEvent e) {
 		
-		final ArrayList<UUID> spectatorsAffected = new ArrayList<UUID>();
+		final ArrayList<UUID> spectatorsAffected = new ArrayList<>();
 		
 		for(LivingEntity player : e.getAffectedEntities()) {
-			if(player instanceof Player && !player.hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(((Player) player).getUniqueId()).isSpectating()) {
+			if(player instanceof Player && !player.hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(player.getUniqueId()).isSpectating()) {
 				spectatorsAffected.add(player.getUniqueId());
 			}
 		}
@@ -186,12 +179,12 @@ public class SpectatorListener implements Listener {
 			Boolean teleportationNeeded = false;
 			
 			for(Entity entity : e.getEntity().getNearbyEntities(2, 2, 2)) {
-				if(entity instanceof Player && !entity.hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(((Player) entity).getUniqueId()).isSpectating()) {
+				if(entity instanceof Player && !entity.hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(entity.getUniqueId()).isSpectating()) {
 					teleportationNeeded = true;
 				}
 			}
 			
-			final HashMap<UUID,Boolean> oldFlyMode = new HashMap<UUID,Boolean>(); 
+			final HashMap<UUID,Boolean> oldFlyMode = new HashMap<>();
 			
 			for(UUID spectatorUUID : spectatorsAffected) {
 				
@@ -213,41 +206,35 @@ public class SpectatorListener implements Listener {
 				final Location initialProjectileLocation = e.getEntity().getLocation();
 				final Vector initialProjectileVelocity = e.getEntity().getVelocity();
 				
-				SkyWarsReloaded.get().getServer().getScheduler().runTaskLater(SkyWarsReloaded.get(), new Runnable() {
-					@Override
-					public void run() {
-						ThrownPotion clonedEntity = (ThrownPotion) e.getEntity().getWorld().spawnEntity(initialProjectileLocation, e.getEntity().getType()); 
-						clonedEntity.setShooter(e.getEntity().getShooter());
-						clonedEntity.setTicksLived(e.getEntity().getTicksLived());
-						clonedEntity.setFallDistance(e.getEntity().getFallDistance());
-						clonedEntity.setBounce(e.getEntity().doesBounce());
-						if(e.getEntity().getPassenger() != null) {
-							clonedEntity.setPassenger(e.getEntity().getPassenger()); // hey, why not
-						}
-						
-						// Clones the effects
-						clonedEntity.setItem(e.getEntity().getItem());
-						
-						// Clones the speed/direction
-						clonedEntity.setVelocity(initialProjectileVelocity);
-						
-						// Just in case
-						e.getEntity().remove();
-					}
-				}, 1L);
+				SkyWarsReloaded.get().getServer().getScheduler().runTaskLater(SkyWarsReloaded.get(), () -> {
+                    ThrownPotion clonedEntity = (ThrownPotion) e.getEntity().getWorld().spawnEntity(initialProjectileLocation, e.getEntity().getType());
+                    clonedEntity.setShooter(e.getEntity().getShooter());
+                    clonedEntity.setTicksLived(e.getEntity().getTicksLived());
+                    clonedEntity.setFallDistance(e.getEntity().getFallDistance());
+                    clonedEntity.setBounce(e.getEntity().doesBounce());
+                    if(e.getEntity().getPassenger() != null) {
+                        clonedEntity.setPassenger(e.getEntity().getPassenger()); // hey, why not
+                    }
+
+                    // Clones the effects
+                    clonedEntity.setItem(e.getEntity().getItem());
+
+                    // Clones the speed/direction
+                    clonedEntity.setVelocity(initialProjectileVelocity);
+
+                    // Just in case
+                    e.getEntity().remove();
+                }, 1L);
 				
-				SkyWarsReloaded.get().getServer().getScheduler().runTaskLater(SkyWarsReloaded.get(), new Runnable() {
-					@Override
-					public void run() {
-						for(UUID spectatorUUID : spectatorsAffected) {
-							Player spectator = SkyWarsReloaded.get().getServer().getPlayer(spectatorUUID);
-							
-							spectator.teleport(spectator.getLocation().add(0, -10, 0), TeleportCause.PLUGIN);
-							spectator.setAllowFlight(true);
-							spectator.setFlying(oldFlyMode.get(spectatorUUID));
-						}
-					}
-				}, 5L);
+				SkyWarsReloaded.get().getServer().getScheduler().runTaskLater(SkyWarsReloaded.get(), () -> {
+                    for(UUID spectatorUUID : spectatorsAffected) {
+                        Player spectator = SkyWarsReloaded.get().getServer().getPlayer(spectatorUUID);
+
+                        spectator.teleport(spectator.getLocation().add(0, -10, 0), TeleportCause.PLUGIN);
+                        spectator.setAllowFlight(true);
+                        spectator.setFlying(oldFlyMode.get(spectatorUUID));
+                    }
+                }, 5L);
 				
 				e.setCancelled(true);
 			}	
@@ -286,10 +273,10 @@ public class SpectatorListener implements Listener {
 	protected void onEntityTarget(EntityTargetEvent e) {
 		// On entity target - Stop mobs targeting spectators
 		// Check to make sure it isn't an NPC (Citizens NPC's will be detectable using 'entity.hasMetadata("NPC")')
-		if (e.getTarget() != null && e.getTarget() instanceof Player && !e.getTarget().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(((Player) e.getTarget()).getUniqueId()).isSpectating()) {
+		if (e.getTarget() != null && e.getTarget() instanceof Player && !e.getTarget().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(e.getTarget().getUniqueId()).isSpectating()) {
 			e.setCancelled(true);
 		}
-		if (e.getTarget() instanceof Player && e.getTarget() != null && SkyWarsReloaded.getPC().getPlayer(((Player) e.getTarget()).getUniqueId()).isSpectating()) {
+		if (e.getTarget() instanceof Player && e.getTarget() != null && SkyWarsReloaded.getPC().getPlayer(e.getTarget().getUniqueId()).isSpectating()) {
 			if (e.getEntity() instanceof ExperienceOrb) {
 				repellExpOrb((Player) e.getTarget(), (ExperienceOrb) e.getEntity());
 				e.setCancelled(true);
@@ -309,7 +296,7 @@ public class SpectatorListener implements Listener {
 	protected void onEntityDamage(EntityDamageEvent e) {
 		// On entity damage - Stops users hitting players and mobs while spectating
 		// Check to make sure it isn't an NPC (Citizens NPC's will be detectable using 'entity.hasMetadata("NPC")')
-		if (e.getEntity() instanceof Player && !e.getEntity().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(((Player) e.getEntity()).getUniqueId()).isSpectating()) {
+		if (e.getEntity() instanceof Player && !e.getEntity().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(e.getEntity().getUniqueId()).isSpectating()) {
 			e.setCancelled(true);
 			e.getEntity().setFireTicks(0);
 		}
@@ -317,7 +304,7 @@ public class SpectatorListener implements Listener {
 	
 	@EventHandler
 	protected void onFoodLevelChange(FoodLevelChangeEvent e) {
-		if (e.getEntity() instanceof Player && !e.getEntity().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(((Player) e.getEntity()).getUniqueId()).isSpectating()) {
+		if (e.getEntity() instanceof Player && !e.getEntity().hasMetadata("NPC") && SkyWarsReloaded.getPC().getPlayer(e.getEntity().getUniqueId()).isSpectating()) {
 			e.setCancelled(true);
 			((Player) e.getEntity()).setFoodLevel(20);
 			((Player) e.getEntity()).setSaturation(20);
@@ -358,7 +345,7 @@ public class SpectatorListener implements Listener {
 				if(e.hasBlock()) {
 					if(e.getClickedBlock().getState() instanceof InventoryHolder) {
 							Inventory original = ((InventoryHolder) e.getClickedBlock().getState()).getInventory();
-							Inventory copy = null;
+							Inventory copy;
 							
 							if(original.getType().equals(InventoryType.CHEST) && original.getSize() > 27) {
 								String title;
@@ -478,19 +465,19 @@ public class SpectatorListener implements Listener {
 
 	@EventHandler
 	public void onInventoryDrag(InventoryDragEvent e) {
-		if (SkyWarsReloaded.getPC().getPlayer(((Player) e.getWhoClicked()).getUniqueId()).isSpectating()) {
+		if (SkyWarsReloaded.getPC().getPlayer(e.getWhoClicked().getUniqueId()).isSpectating()) {
 			e.setCancelled(true);
 		}
 	}
 	
 	@EventHandler
 	public void onVehicleEnter(VehicleEnterEvent e) {
-		if (e.getEntered() instanceof Player && SkyWarsReloaded.getPC().getPlayer(((Player) e.getEntered()).getUniqueId()).isSpectating()) {
+		if (e.getEntered() instanceof Player && SkyWarsReloaded.getPC().getPlayer(e.getEntered().getUniqueId()).isSpectating()) {
 			e.setCancelled(true);
 		}
 	}
 	
-    final void repellExpOrb(final Player player, final ExperienceOrb orb) {
+    private void repellExpOrb(final Player player, final ExperienceOrb orb) {
 		final Location pLoc = player.getLocation();
 		final Location oLoc = orb.getLocation();
 		final Vector dir = oLoc.toVector().subtract(pLoc.toVector());

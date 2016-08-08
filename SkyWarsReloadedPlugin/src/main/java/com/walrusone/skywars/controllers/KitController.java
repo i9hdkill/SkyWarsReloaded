@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GameKit;
 import com.walrusone.skywars.game.GamePlayer;
-
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -42,7 +41,7 @@ public class KitController {
             SkyWarsReloaded.get().saveResource("example.yml", true);
             copyFiles(new File(dataDirectory, "example.yml"), new File(kitsDirectory, "example.yml"));
             File delete = new File(dataDirectory, "example.yml");
-            delete.delete();
+            delete.delete(); //TODO check success
         }
 
         File[] kits = kitsDirectory.listFiles();
@@ -63,13 +62,13 @@ public class KitController {
         }
     }
     
-    public void copyFiles(File source, File target){
+    private void copyFiles(File source, File target){
 	    try {
-	        ArrayList<String> ignore = new ArrayList<String>(Arrays.asList("uid.dat", "session.dat"));
+	        ArrayList<String> ignore = new ArrayList<>(Arrays.asList("uid.dat", "session.dat"));
 	        if(!ignore.contains(source.getName())) {
 	            if(source.isDirectory()) {
 	                if(!target.exists())
-	                target.mkdirs();
+	                target.mkdirs(); //TODO check success
 	                String files[] = source.list();
 	                for (String file : files) {
 	                    File srcFile = new File(source, file);
@@ -88,7 +87,7 @@ public class KitController {
 	            }
 	        }
 	    } catch (IOException e) {
-	 
+	        e.printStackTrace();
 	    }
 	}
     
@@ -97,6 +96,7 @@ public class KitController {
         	try {
                 inventory.addItem(itemStack);
         	} catch(NullPointerException e) {
+                e.printStackTrace();
         	}
 
         }

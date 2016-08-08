@@ -1,11 +1,10 @@
 package com.walrusone.skywars.api;
 
-import java.util.UUID;
-
-import org.bukkit.entity.Player;
-
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GamePlayer;
+import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class API {
 	

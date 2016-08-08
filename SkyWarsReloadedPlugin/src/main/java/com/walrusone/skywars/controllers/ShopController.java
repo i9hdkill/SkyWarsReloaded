@@ -6,7 +6,6 @@ import com.google.common.collect.Maps;
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.utilities.ItemUtils;
 import com.walrusone.skywars.utilities.ShopItem;
-
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -40,7 +39,7 @@ public class ShopController {
 
             if (storage.contains("items")) {
                 for (String item : storage.getStringList("items")) {
-                    List<String> itemData = new LinkedList<String>(Arrays.asList(item.split(" ")));
+                    List<String> itemData = new LinkedList<>(Arrays.asList(item.split(" ")));
 
                     int cost = Integer.parseInt(itemData.get(0));
                     itemData.remove(itemData.get(0));
@@ -67,7 +66,7 @@ public class ShopController {
 
             if (storage.contains("items")) {
                 for (String item : storage.getStringList("items")) {
-                    List<String> itemData = new LinkedList<String>(Arrays.asList(item.split(" ")));
+                    List<String> itemData = new LinkedList<>(Arrays.asList(item.split(" ")));
 
                     int cost = Integer.parseInt(itemData.get(0));
                     itemData.remove(itemData.get(0));

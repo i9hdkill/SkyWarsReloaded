@@ -1,19 +1,18 @@
 package com.walrusone.skywars.commands;
 
-import java.io.File;
-
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.utilities.Messaging;
+import java.io.File;
 
-public class SaveMapCmd extends BaseCmd { 
+class SaveMapCmd extends BaseCmd {
 	
-	public SaveMapCmd() {
+	SaveMapCmd() {
 		forcePlayer = false;
 		cmdName = "save";
 		argLength = 2; //counting cmdName

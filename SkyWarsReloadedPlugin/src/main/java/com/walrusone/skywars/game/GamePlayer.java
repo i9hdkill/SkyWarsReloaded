@@ -1,18 +1,17 @@
 package com.walrusone.skywars.game;
 
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.utilities.Tagged;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.utilities.Tagged;
 
 public class GamePlayer {
 
@@ -39,8 +38,8 @@ public class GamePlayer {
 	private int timeVote = 0;
 	private int jumpVote = 0;
 	private int weatherVote = 0;
-	private List<String> permissions = new ArrayList<String>();
-	private List<String> newPerms = new ArrayList<String>();
+	private List<String> permissions = new ArrayList<>();
+	private List<String> newPerms = new ArrayList<>();
 	
 	public GamePlayer (UUID uuid) {
 		this.uuid = uuid;
@@ -113,7 +112,7 @@ public class GamePlayer {
 		taggedBy = new Tagged(player, System.currentTimeMillis());
 	}
 	
-	public Tagged getTagged() {
+	Tagged getTagged() {
 		return taggedBy;
 	}
 	
@@ -149,7 +148,7 @@ public class GamePlayer {
 		return hasKitSelected;
 	}
 	
-	public GameKit getSelectedKit() {
+	GameKit getSelectedKit() {
 		return selectedKit;
 	}
 	
@@ -165,7 +164,7 @@ public class GamePlayer {
 		blocksPlaced = s;
 	}
 
-	public void setSpecGame(int game) {
+	void setSpecGame(int game) {
 		specGame = game;
 	}
 	
@@ -184,7 +183,7 @@ public class GamePlayer {
 	public void spectateMode(boolean state, Game game, Location location, boolean shutdown) {
 		if (state) {
 			if (getP() != null) {
-				setSpectating(state);
+				setSpectating(true);
 				game.addSpectator(this);
 				setSpecGame(game.getGameNumber());
 				for (Player target: SkyWarsReloaded.get().getServer().getOnlinePlayers()) {
@@ -195,28 +194,23 @@ public class GamePlayer {
 				getP().setScoreboard(game.getScoreboard());
 				getP().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
 				getP().teleport(location, TeleportCause.PLUGIN);
-				SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-					@Override
-					public void run() {
-						if (getP() != null) {
-							getP().setAllowFlight(true);
-							getP().setFlying(true);
-							getP().getInventory().clear();
-							giveSpectateItems();
-						}
-					}
-				}, 5);
+				SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> {
+                    if (getP() != null) {
+                        getP().setAllowFlight(true);
+                        getP().setFlying(true);
+                        getP().getInventory().clear();
+                        giveSpectateItems();
+                    }
+                }, 5);
 
 			}
 		} else {
 			if (getP() != null) {
-				setSpectating(state);
+				setSpectating(false);
 				setSpecGame(-1);
-				for (Player target: SkyWarsReloaded.get().getServer().getOnlinePlayers()) {
-					if (getP() != null) {
-						target.showPlayer(getP());
-					}
-				}
+				SkyWarsReloaded.get().getServer().getOnlinePlayers().stream().filter(target -> getP() != null).forEach(target -> {
+					target.showPlayer(getP());
+				});
 				getP().setScoreboard(SkyWarsReloaded.get().getServer().getScoreboardManager().getNewScoreboard());
 				for (PotionEffect effect : getP().getActivePotionEffects()) {
 			        getP().removePotionEffect(effect.getType());
@@ -224,16 +218,13 @@ public class GamePlayer {
 				getP().setFireTicks(0);
 				getP().teleport(location, TeleportCause.PLUGIN);
 				if (!shutdown) {
-					SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-						@Override
-						public void run() {
-							if (getP() != null) {
-								getP().setAllowFlight(false);
-								getP().setFlying(false);
-								SkyWarsReloaded.getInvC().restoreInventory(getP());
-							}
-						}
-					}, 5);
+					SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> {
+                        if (getP() != null) {
+                            getP().setAllowFlight(false);
+                            getP().setFlying(false);
+                            SkyWarsReloaded.getInvC().restoreInventory(getP());
+                        }
+                    }, 5);
 				}
 			}
 		}
@@ -255,10 +246,7 @@ public class GamePlayer {
 	}
 
 	public boolean gamemodeChangeAllowed() {
-		if (isSpectating) {
-			return false;
-		}
-		return true;
+		return !isSpectating;
 	}
 
 	public int getOpVote() {
@@ -316,7 +304,7 @@ public class GamePlayer {
 	
 	public void clearNewPerms() {
 		newPerms = null;
-		newPerms = new ArrayList<String>();
+		newPerms = new ArrayList<>();
 	}
 	
 	public List<String> getNewPerms() {
@@ -324,10 +312,7 @@ public class GamePlayer {
 	}
 	
 	public boolean hasPerm(String perm) {
-		if (permissions.contains(perm)) {
-			return true;
-		}
-		return false;
+		return permissions.contains(perm);
 	}
 	
 	public void setPerms(List<String> perms) {

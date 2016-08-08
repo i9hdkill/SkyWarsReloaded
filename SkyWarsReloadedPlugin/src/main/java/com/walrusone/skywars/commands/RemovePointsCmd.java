@@ -1,15 +1,14 @@
 package com.walrusone.skywars.commands;
 
-import org.bukkit.ChatColor;
-
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.utilities.Util;
+import org.bukkit.ChatColor;
 
 
-public class RemovePointsCmd extends BaseCmd { 
+class RemovePointsCmd extends BaseCmd {
 	
-	public RemovePointsCmd() {
+	RemovePointsCmd() {
 		forcePlayer = false;
 		cmdName = "removepoints";
 		argLength = 3; //counting cmdName

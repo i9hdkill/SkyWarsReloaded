@@ -1,8 +1,9 @@
 package com.walrusone.skywars.game;
 
-import java.io.File;
-import java.util.Map;
-
+import com.google.common.collect.Maps;
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.controllers.WorldController;
+import com.walrusone.skywars.utilities.EmptyChest;
 import org.bukkit.Chunk;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
@@ -14,10 +15,8 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.inventory.InventoryHolder;
 
-import com.google.common.collect.Maps;
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.controllers.WorldController;
-import com.walrusone.skywars.utilities.EmptyChest;
+import java.io.File;
+import java.util.Map;
 
 public class GameMap {
 
@@ -64,19 +63,19 @@ public class GameMap {
 		return false;
 	}
 	
-	public Map<Integer, Location> getSpawns(){
+	Map<Integer, Location> getSpawns(){
 		return spawnPoints;
 	}
 	
-	public Map<Integer, EmptyChest> getChests(){
+	Map<Integer, EmptyChest> getChests(){
 		return chests;
 	}
 	
-	public Map<Integer, EmptyChest> getDoubleChests(){
+	Map<Integer, EmptyChest> getDoubleChests(){
 		return doubleChests;
 	}
 	
-	public boolean loadMap(int gNumber) {
+	boolean loadMap(int gNumber) {
 		WorldController wc = SkyWarsReloaded.getWC();
 		String mapName = name + "_" + gNumber;
 		boolean mapExists = false;
@@ -110,7 +109,7 @@ public class GameMap {
 		return loaded;
 	}
 	
-	public void ChunkIterator() {
+	private void ChunkIterator() {
 		World chunkWorld = SkyWarsReloaded.get().getServer().getWorld(name);
 		min = chunkWorld.getBlockAt(minX, minY, minZ);
 		max = chunkWorld.getBlockAt(maxX, maxY, maxZ);

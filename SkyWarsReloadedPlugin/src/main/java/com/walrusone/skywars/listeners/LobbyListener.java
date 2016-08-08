@@ -1,5 +1,6 @@
 package com.walrusone.skywars.listeners;
 
+import com.walrusone.skywars.SkyWarsReloaded;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -10,15 +11,13 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
-
-import com.walrusone.skywars.SkyWarsReloaded;
 
 public class LobbyListener implements Listener {
 		
@@ -131,25 +130,21 @@ public class LobbyListener implements Listener {
 	public void onTeleportEvent(PlayerTeleportEvent e) {
 		final Player player = e.getPlayer();
 		if (teleportBetweenWorlds(e.getTo().getWorld(), e.getFrom().getWorld()) && teleportToLobby(e.getTo().getWorld())) {
-			SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-				public void run() {
-					if (player != null) {
-						givePlayerItems(player);
-					}
-				}
-			}, 8);
+			SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> {
+                if (player != null) {
+                    givePlayerItems(player);
+                }
+            }, 8);
 		} else if (teleportBetweenWorlds(e.getTo().getWorld(), e.getFrom().getWorld()) && !teleportToLobby(e.getTo().getWorld())) {
-			SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-				public void run() {
-					if (player != null) {
-						removePlayerItems(player);
-					}
-				}
-			}, 8);
+			SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> {
+                if (player != null) {
+                    removePlayerItems(player);
+                }
+            }, 8);
 		}
 	}
 	
-	public void givePlayerItems(Player p) {
+	private void givePlayerItems(Player p) {
 		if (SkyWarsReloaded.getCfg().giveSpectateItem()) {
 			if (p.hasPermission("swr.spectate")) {
 				p.getInventory().setItem(SkyWarsReloaded.getCfg().getSpectateItemSlot(), SkyWarsReloaded.getCfg().getSpectateItem());
@@ -164,7 +159,7 @@ public class LobbyListener implements Listener {
 		SkyWarsReloaded.getScore().getScoreboard(p);
 	}
 	
-	public void removePlayerItems(Player player) {
+	private void removePlayerItems(Player player) {
 		if (player != null) {
 			if (SkyWarsReloaded.getPC().getPlayer(player.getUniqueId()) != null) {
 				if (!SkyWarsReloaded.getPC().getPlayer(player.getUniqueId()).inGame()) {
@@ -179,40 +174,25 @@ public class LobbyListener implements Listener {
 		}
 	}
 	
-	public boolean inLobbyWorld(Player p) {
+	private boolean inLobbyWorld(Player p) {
 		Location spawn = SkyWarsReloaded.getCfg().getSpawn();
 		if (spawn != null) {
-			if (spawn.getWorld().equals(p.getWorld())) {
-				return true;
-			} else {
-				return false;
-			}
+			return spawn.getWorld().equals(p.getWorld());
 		} else {
 			return false;
 		}
 	}
 	
-	public boolean teleportBetweenWorlds(World to, World from) {
-		if (to.equals(from)) {
-			return false;
-		}
-		return true;
+	private boolean teleportBetweenWorlds(World to, World from) {
+		return !to.equals(from);
 	}
 	
-	public boolean teleportToLobby(World to) {
+	private boolean teleportToLobby(World to) {
 		Location spawn = SkyWarsReloaded.getCfg().getSpawn();
-		if (spawn != null) {
-			if (spawn.getWorld().equals(to)) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
+		return spawn != null && spawn.getWorld().equals(to);
 	}
 	
-	public boolean hasIgnorePermission(Player player) {
+	private boolean hasIgnorePermission(Player player) {
 		return player.isOp() || player.hasPermission("swr.ignoreLobbyGuard");
 	}
     

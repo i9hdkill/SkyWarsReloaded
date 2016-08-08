@@ -1,7 +1,10 @@
 package com.walrusone.skywars.listeners;
 
-import java.io.File;
-
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.game.Game;
+import com.walrusone.skywars.game.Game.GameState;
+import com.walrusone.skywars.game.GamePlayer;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,11 +21,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.game.Game;
-import com.walrusone.skywars.game.GamePlayer;
-import com.walrusone.skywars.game.Game.GameState;
-import com.walrusone.skywars.utilities.Messaging;
+import java.io.File;
 
 public class SignListener implements Listener {
 
@@ -78,7 +77,7 @@ public class SignListener implements Listener {
 	    	Sign sign = (Sign) b.getState();
 	    	String line1 = ChatColor.stripColor(sign.getLine(0));
 			if (line1.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("signJoinSigns.line1"))))) {
-            	 String world = blockLocation.getWorld().getName().toString();
+            	 String world = blockLocation.getWorld().getName();
          		 int x = blockLocation.getBlockX();
          		 int y = blockLocation.getBlockY();
          		 int z = blockLocation.getBlockZ();

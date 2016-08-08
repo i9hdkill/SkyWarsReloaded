@@ -1,17 +1,16 @@
 package com.walrusone.skywars.commands;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.Game;
 import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.utilities.GlassColor;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 
-public class SetGlassCmd extends BaseCmd { 
+class SetGlassCmd extends BaseCmd {
 	
-	public SetGlassCmd() {
+	SetGlassCmd() {
 		forcePlayer = false;
 		cmdName = "setglass";
 		argLength = 3; //counting cmdName
@@ -58,7 +57,7 @@ public class SetGlassCmd extends BaseCmd {
 				sender.sendMessage(ChatColor.RED + "That is not a valid color. Valid colors are:");
 				StringBuilder colors = new StringBuilder();
 				for (GlassColor gColor: SkyWarsReloaded.getGLC().getColorItems()) {
-					colors.append(gColor.getColor() + ", ");
+					colors.append(gColor.getColor()).append(", ");
 				}
 				colors.append("normal");
 				String col = colors.toString();

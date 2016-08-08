@@ -1,14 +1,13 @@
 package com.walrusone.skywars.commands;
 
-import java.util.ArrayList;
-
+import com.walrusone.skywars.SkyWarsReloaded;
 import org.bukkit.ChatColor;
 
-import com.walrusone.skywars.SkyWarsReloaded;
+import java.util.ArrayList;
 
-public class ListMapsCmd extends BaseCmd { 
+class ListMapsCmd extends BaseCmd {
 
-	public ListMapsCmd() {
+	ListMapsCmd() {
 		forcePlayer = false;
 		cmdName = "list";
 		argLength = 1; //counting cmdName

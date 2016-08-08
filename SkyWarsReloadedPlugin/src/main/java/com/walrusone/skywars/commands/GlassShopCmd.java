@@ -1,15 +1,15 @@
 package com.walrusone.skywars.commands;
 
-import org.bukkit.ChatColor;
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.menus.BuyColorMenu;
 import com.walrusone.skywars.utilities.Messaging;
+import org.bukkit.ChatColor;
 
 
-public class GlassShopCmd extends BaseCmd { 
+class GlassShopCmd extends BaseCmd {
 
-	public GlassShopCmd() {
+	GlassShopCmd() {
 		forcePlayer = true;
 		cmdName = "glassshop";
 		argLength = 1; //counting cmdName

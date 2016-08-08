@@ -1,17 +1,16 @@
 package com.walrusone.skywars.menus;
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.game.Game.GameState;
+import com.walrusone.skywars.game.GameKit;
+import com.walrusone.skywars.game.GamePlayer;
+import com.walrusone.skywars.utilities.IconMenu;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import com.google.common.collect.Lists;
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.game.GameKit;
-import com.walrusone.skywars.game.GamePlayer;
-import com.walrusone.skywars.game.Game.GameState;
-import com.walrusone.skywars.utilities.IconMenu;
-import com.walrusone.skywars.utilities.Messaging;
+import java.util.List;
 
 public class KitMenu {
 
@@ -35,48 +34,45 @@ public class KitMenu {
             rowCount += menuSlotsPerRow;
         }
 
-        SkyWarsReloaded.getIC().create(gamePlayer.getP(), menuName, rowCount, new IconMenu.OptionClickEventHandler() {
-            @Override
-            public void onOptionClick(IconMenu.OptionClickEvent event) {
-                if (!gamePlayer.inGame()) {
-                	event.getPlayer().sendMessage(new Messaging.MessageFormatter().format("error.can-not-pick-kit"));
-                    return;
-                }
-
-                if (gamePlayer.getGame().getState() != GameState.PREGAME) {
-                	event.getPlayer().sendMessage(new Messaging.MessageFormatter().format("error.can-not-pick-kit"));
-                    return;
-                }
-
-                GameKit kit = SkyWarsReloaded.getKC().getByName(ChatColor.stripColor(event.getName()));
-                if (kit == null) {
-                    return;
-                }
-
-                if (!hasPermission(event.getPlayer(), kit) && !hasFreePermission(gamePlayer, kit)) {
-                	event.getPlayer().sendMessage(new Messaging.MessageFormatter().format("error.no-permission-kit"));
-                	return;
-                }
-
-                if (!hasFreePermission(gamePlayer, kit)) {
-                	if (isPurchaseAble(kit)) {
-                		if (!canPurchase(gamePlayer, kit)) {
-                    		event.getPlayer().sendMessage(new Messaging.MessageFormatter().format("error.not-enough-balance"));
-                            return;
-                		} else {
-                			removeBalance(gamePlayer, kit.getCost());
-                		} 
-                	}
-                }    
-
-                event.setWillClose(true);
-                event.setWillDestroy(true);
-
-                gamePlayer.setSelectedKit(kit);
-                gamePlayer.setKitSelected(true);
-                
-                event.getPlayer().sendMessage(new Messaging.MessageFormatter().setVariable("kit", kit.getKitName()).format("game.enjoy-kit"));
+        SkyWarsReloaded.getIC().create(gamePlayer.getP(), menuName, rowCount, event -> {
+            if (!gamePlayer.inGame()) {
+                event.getPlayer().sendMessage(new Messaging.MessageFormatter().format("error.can-not-pick-kit"));
+                return;
             }
+
+            if (gamePlayer.getGame().getState() != GameState.PREGAME) {
+                event.getPlayer().sendMessage(new Messaging.MessageFormatter().format("error.can-not-pick-kit"));
+                return;
+            }
+
+            GameKit kit = SkyWarsReloaded.getKC().getByName(ChatColor.stripColor(event.getName()));
+            if (kit == null) {
+                return;
+            }
+
+            if (!hasPermission(event.getPlayer(), kit) && !hasFreePermission(gamePlayer, kit)) {
+                event.getPlayer().sendMessage(new Messaging.MessageFormatter().format("error.no-permission-kit"));
+                return;
+            }
+
+            if (!hasFreePermission(gamePlayer, kit)) {
+                if (isPurchaseAble(kit)) {
+                    if (!canPurchase(gamePlayer, kit)) {
+                        event.getPlayer().sendMessage(new Messaging.MessageFormatter().format("error.not-enough-balance"));
+                        return;
+                    } else {
+                        removeBalance(gamePlayer, kit.getCost());
+                    }
+                }
+            }
+
+            event.setWillClose(true);
+            event.setWillDestroy(true);
+
+            gamePlayer.setSelectedKit(kit);
+            gamePlayer.setKitSelected(true);
+
+            event.getPlayer().sendMessage(new Messaging.MessageFormatter().setVariable("kit", kit.getKitName()).format("game.enjoy-kit"));
         });
 
         for (int iii = 0; iii < availableKits.size(); iii ++) {
@@ -130,18 +126,15 @@ public class KitMenu {
         return player.isOp() || player.hasPermission(premissionPrefix + kit.getName().toLowerCase());
     }
     
-    public boolean hasFreePermission(GamePlayer player, GameKit kit) {
+    private boolean hasFreePermission(GamePlayer player, GameKit kit) {
         return (player.getP().isOp() || player.getP().hasPermission(premissionPrefix + "free." + kit.getName().toLowerCase()) || player.hasPerm(premissionPrefix + "free." + kit.getName().toLowerCase()));
     }
     
-    public boolean isPurchaseAble(GameKit kit) {
-        if (kit.getCost() > 0) {
-        	return true;
-        }
-        return false;
+    private boolean isPurchaseAble(GameKit kit) {
+        return kit.getCost() > 0;
     }
 
-    public boolean canPurchase(GamePlayer gamePlayer, GameKit kit) {
+    private boolean canPurchase(GamePlayer gamePlayer, GameKit kit) {
     	if (SkyWarsReloaded.getCfg().usingExternalEcomony()) {
             return (SkyWarsReloaded.econ.getBalance(gamePlayer.getP()) >= kit.getCost());
     	} else {

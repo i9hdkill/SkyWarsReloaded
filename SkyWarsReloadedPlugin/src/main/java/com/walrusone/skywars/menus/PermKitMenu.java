@@ -1,18 +1,17 @@
 package com.walrusone.skywars.menus;
 
-import java.util.List;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import com.google.common.collect.Lists;
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GameKit;
 import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.utilities.IconMenu;
 import com.walrusone.skywars.utilities.Messaging;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class PermKitMenu {
 
@@ -36,62 +35,46 @@ public class PermKitMenu {
             rowCount += menuSlotsPerRow;
         }
 
-        SkyWarsReloaded.getIC().create(gamePlayer.getP(), menuName, rowCount, new IconMenu.OptionClickEventHandler() {
-            @Override
-            public void onOptionClick(IconMenu.OptionClickEvent event) {
-                if (gamePlayer.inGame()) {
-                	gamePlayer.getP().closeInventory();
-                    return;
-                }
+        SkyWarsReloaded.getIC().create(gamePlayer.getP(), menuName, rowCount, event -> {
+            if (gamePlayer.inGame()) {
+                gamePlayer.getP().closeInventory();
+                return;
+            }
 
-                String name = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', event.getName()));
-                if (name.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.return-to-lobbymenu"))))) {
-                	gamePlayer.getP().closeInventory();
-                	if (!gamePlayer.inGame()) {
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new LobbyMainMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	}
-                	return;
+            String name = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', event.getName()));
+            if (name.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.return-to-lobbymenu"))))) {
+                gamePlayer.getP().closeInventory();
+                if (!gamePlayer.inGame()) {
+                    SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new LobbyMainMenu(gamePlayer), 2);
                 }
-                
-                GameKit kit = SkyWarsReloaded.getKC().getByName(ChatColor.stripColor(event.getName()));
-                if (kit == null) {
-                	gamePlayer.getP().closeInventory();
-                    return;
-                }
+                return;
+            }
 
-                if (!hasPermission(event.getPlayer(), kit) && !hasFreePermission(gamePlayer, kit)) {
-                	event.getPlayer().sendMessage(new Messaging.MessageFormatter().format("error.no-permission-kit"));
-                	return;
-                }
+            GameKit kit = SkyWarsReloaded.getKC().getByName(ChatColor.stripColor(event.getName()));
+            if (kit == null) {
+                gamePlayer.getP().closeInventory();
+                return;
+            }
 
-                event.setWillClose(false);
-                event.setWillDestroy(false);
-                
-                if (!hasFreePermission(gamePlayer, kit)) {
-                	if (isPurchaseAble(kit)) {
-                		if (!canPurchase(gamePlayer, kit)) {
-                    		event.getPlayer().sendMessage(new Messaging.MessageFormatter().format("error.not-enough-balance"));
-                            return;
-                		} else {
-                			removeBalance(gamePlayer, kit.getPermCost());
-                			gamePlayer.addPerm(premissionPrefix + "free." + kit.getName().toLowerCase());
-                        	if (!gamePlayer.inGame()) {
-                            	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-            						@Override
-            						public void run() {
-            	                    	updatePermKitMenu(gamePlayer);
-            						}
-                            	}, 2);
-                        	}
-                		} 
-                	}
-                } else {
-                	return;
+            if (!hasPermission(event.getPlayer(), kit) && !hasFreePermission(gamePlayer, kit)) {
+                event.getPlayer().sendMessage(new Messaging.MessageFormatter().format("error.no-permission-kit"));
+                return;
+            }
+
+            event.setWillClose(false);
+            event.setWillDestroy(false);
+
+            if (!hasFreePermission(gamePlayer, kit)) {
+                if (isPurchaseAble(kit)) {
+                    if (!canPurchase(gamePlayer, kit)) {
+                        event.getPlayer().sendMessage(new Messaging.MessageFormatter().format("error.not-enough-balance"));
+                    } else {
+                        removeBalance(gamePlayer, kit.getPermCost());
+                        gamePlayer.addPerm(premissionPrefix + "free." + kit.getName().toLowerCase());
+                        if (!gamePlayer.inGame()) {
+                            SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> updatePermKitMenu(gamePlayer), 2);
+                        }
+                    }
                 }
             }
         });
@@ -155,10 +138,9 @@ public class PermKitMenu {
     }
     
     
-    public void updatePermKitMenu(final GamePlayer gamePlayer) {
+    private void updatePermKitMenu(final GamePlayer gamePlayer) {
 		if (!SkyWarsReloaded.getIC().has(gamePlayer.getP()) || gamePlayer.inGame() || !SkyWarsReloaded.getIC().getMenu(gamePlayer.getP()).getName().equalsIgnoreCase(menuName)) {
 			gamePlayer.getP().closeInventory();
-			return;
 		} else {
 			List<GameKit> availableKits = SkyWarsReloaded.getKC().getKits();
 	        for (int iii = 0; iii < availableKits.size(); iii ++) {
@@ -225,18 +207,15 @@ public class PermKitMenu {
         return player.isOp() || player.hasPermission(premissionPrefix + kit.getName().toLowerCase());
     }
     
-    public boolean hasFreePermission(GamePlayer player, GameKit kit) {
+    private boolean hasFreePermission(GamePlayer player, GameKit kit) {
         return (player.getP().isOp() || player.getP().hasPermission(premissionPrefix + "free." + kit.getName().toLowerCase()) || player.hasPerm(premissionPrefix + "free." + kit.getName().toLowerCase()));
     }
     
-    public boolean isPurchaseAble(GameKit kit) {
-        if (kit.getPermCost() > 0) {
-        	return true;
-        }
-        return false;
-    }
+    private boolean isPurchaseAble(GameKit kit) {
+		return kit.getPermCost() > 0;
+	}
 
-    public boolean canPurchase(GamePlayer gamePlayer, GameKit kit) {
+    private boolean canPurchase(GamePlayer gamePlayer, GameKit kit) {
     	if (SkyWarsReloaded.getCfg().usingExternalEcomony()) {
             return (SkyWarsReloaded.econ.getBalance(gamePlayer.getP()) >= kit.getPermCost());
     	} else {

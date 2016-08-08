@@ -1,15 +1,14 @@
 package com.walrusone.skywars.commands;
 
-import org.bukkit.Location;
-
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.menus.PermKitMenu;
 import com.walrusone.skywars.utilities.Messaging;
+import org.bukkit.Location;
 
-public class PermKitShopCmd extends BaseCmd { 
+class PermKitShopCmd extends BaseCmd {
 	
-	public PermKitShopCmd() {
+	PermKitShopCmd() {
 		forcePlayer = true;
 		cmdName = "permkitshop";
 		argLength = 1; //counting cmdName

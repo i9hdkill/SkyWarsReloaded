@@ -3,7 +3,6 @@ package com.walrusone.skywars.listeners;
 import com.google.common.collect.Maps;
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.utilities.IconMenu;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -67,19 +66,17 @@ public class IconMenuController implements Listener {
     }
 
     public void destroyAll() {
-        for (Player player : new HashSet<Player>(menu.keySet())) {
-            destroy(player);
-        }
+        new HashSet<>(menu.keySet()).forEach(this::destroy);
     }
 
     public boolean has(Player player) {
         return menu.containsKey(player);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent event) {
             if (event.getWhoClicked() instanceof Player) {
-            	if (SkyWarsReloaded.getPC().getPlayer(((Player) event.getWhoClicked()).getUniqueId()).isSpectating() && !menu.containsKey(event.getWhoClicked())) {
+            	if (SkyWarsReloaded.getPC().getPlayer(event.getWhoClicked().getUniqueId()).isSpectating() && !menu.containsKey(event.getWhoClicked())) {
             		event.setCancelled(true);
             	} else if (menu.containsKey(event.getWhoClicked())) {
                     menu.get(event.getWhoClicked()).onInventoryClick(event);

@@ -1,17 +1,16 @@
 package com.walrusone.skywars.menus;
 
-import java.util.List;
-
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import com.google.common.collect.Lists;
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.utilities.IconMenu;
 import com.walrusone.skywars.utilities.Messaging;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class LobbyMainMenu {
 
@@ -26,97 +25,60 @@ public class LobbyMainMenu {
             rowCount += menuSlotsPerRow;
         }
 
-        SkyWarsReloaded.getIC().create(gamePlayer.getP(), optionsMenuName, rowCount, new IconMenu.OptionClickEventHandler() {
-            @Override
-            public void onOptionClick(IconMenu.OptionClickEvent event) {
-            	if (gamePlayer.inGame()) {
-            		gamePlayer.getP().closeInventory();
-            		return;
-            	}
-            	
-                String option = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', event.getName()));
+        SkyWarsReloaded.getIC().create(gamePlayer.getP(), optionsMenuName, rowCount, event -> {
+            if (gamePlayer.inGame()) {
+                gamePlayer.getP().closeInventory();
+                return;
+            }
 
-                event.setWillClose(false);
-                event.setWillDestroy(false);
-                
-                if (option.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.permkit-item-name"))))) {
-                	if (hasPermKitPermission(gamePlayer.getP())) {
-                    	gamePlayer.getP().closeInventory();
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new PermKitMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	} else {
-                		return;
-                	}
-                } else if (option.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.buycolor-item-name"))))) {
-                	if (hasColorPermission(gamePlayer.getP())) {
-                    	gamePlayer.getP().closeInventory();
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new BuyColorMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	}  else {
-                		return;
-                	}
-                } else if (option.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.buyeffect-item-name"))))) {
-                	if (hasEffectPermission(gamePlayer.getP())) {
-                    	gamePlayer.getP().closeInventory();
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new BuyEffectMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	}  else {
-                		return;
-                	}
-                } else if (option.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.buyprojeffect-item-name"))))) {
-                	if (hasEffectPermission(gamePlayer.getP())) {
-                    	gamePlayer.getP().closeInventory();
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new BuyProjEffectMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	}  else {
-                		return;
-                	}
-                } else if (option.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.exit-lobby-menu"))))) {
-                    	gamePlayer.getP().closeInventory();
-                } else {
-                	return;
+            String option = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', event.getName()));
+
+            event.setWillClose(false);
+            event.setWillDestroy(false);
+
+            if (option.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.permkit-item-name"))))) {
+                if (hasPermKitPermission(gamePlayer.getP())) {
+                    gamePlayer.getP().closeInventory();
+                    SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new PermKitMenu(gamePlayer), 2);
                 }
+            } else if (option.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.buycolor-item-name"))))) {
+                if (hasColorPermission(gamePlayer.getP())) {
+                    gamePlayer.getP().closeInventory();
+                    SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new BuyColorMenu(gamePlayer), 2);
+                }
+            } else if (option.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.buyeffect-item-name"))))) {
+                if (hasEffectPermission(gamePlayer.getP())) {
+                    gamePlayer.getP().closeInventory();
+                    SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new BuyEffectMenu(gamePlayer), 2);
+                }
+            } else if (option.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.buyprojeffect-item-name"))))) {
+                if (hasEffectPermission(gamePlayer.getP())) {
+					gamePlayer.getP().closeInventory();
+					SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new BuyProjEffectMenu(gamePlayer), 2);
+				}
+            } else if (option.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.exit-lobby-menu"))))) {
+                    gamePlayer.getP().closeInventory();
             }
         });
 
         List<String> kitLore = Lists.newLinkedList();
-        if (hasPermKitPermission(gamePlayer.getP())) {
-        } else {
-        	kitLore.add(new Messaging.MessageFormatter().format("error.no-permission-permkits"));
+        if (!hasPermKitPermission(gamePlayer.getP())) {
+			kitLore.add(new Messaging.MessageFormatter().format("error.no-permission-permkits"));
         }
         
         List<String> colorLore = Lists.newLinkedList();
-        if (hasColorPermission(gamePlayer.getP())) {
-        } else {
+        if (!hasColorPermission(gamePlayer.getP())) {
         	colorLore.add(new Messaging.MessageFormatter().format("error.no-permission-color-shop"));
         }
         
         List<String> particleLore = Lists.newLinkedList();
-        if (hasEffectPermission(gamePlayer.getP())) {
-        } else {
-        	particleLore.add(new Messaging.MessageFormatter().format("error.no-permission-effect-shop"));
+        if (!hasEffectPermission(gamePlayer.getP())) {
+            particleLore.add(new Messaging.MessageFormatter().format("error.no-permission-effect-shop"));
         }
         
         List<String> projectEffectLore = Lists.newLinkedList();
-        if (hasProjEffectPermission(gamePlayer.getP())) {
-        } else {
-        	projectEffectLore.add(new Messaging.MessageFormatter().format("error.no-permission-projeffect-shop"));
+        if (!hasProjEffectPermission(gamePlayer.getP())) {
+            projectEffectLore.add(new Messaging.MessageFormatter().format("error.no-permission-projeffect-shop"));
         }
         
     	if (gamePlayer.getP() != null && !gamePlayer.inGame()) {
@@ -171,19 +133,19 @@ public class LobbyMainMenu {
     	}
     }
 	
-    public boolean hasEffectPermission(Player player) {
+    private boolean hasEffectPermission(Player player) {
         return player.isOp() || player.hasPermission("swr.effectshop");
     }
     
-    public boolean hasProjEffectPermission(Player player) {
+    private boolean hasProjEffectPermission(Player player) {
         return player.isOp() || player.hasPermission("swr.projeffectshop");
     }
     
-    public boolean hasColorPermission(Player player) {
+    private boolean hasColorPermission(Player player) {
         return player.isOp() || player.hasPermission("swr.colorshop");
     }
     
-    public boolean hasPermKitPermission(Player player) {
+    private boolean hasPermKitPermission(Player player) {
         return player.isOp() || player.hasPermission("swr.permkits");
     }
  

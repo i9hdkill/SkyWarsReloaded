@@ -1,18 +1,17 @@
 package com.walrusone.skywars.config;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.utilities.ItemUtils;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.utilities.ItemUtils;
-import com.walrusone.skywars.utilities.Messaging;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Config {
 
@@ -135,8 +134,8 @@ public class Config {
 	private float yaw;
 	private float pitch;
 	
-	private List<String> commandWhiteList = new ArrayList<String>();
-	private List<String> spectatorWhiteList = new ArrayList<String>();
+	private List<String> commandWhiteList = new ArrayList<>();
+	private List<String> spectatorWhiteList = new ArrayList<>();
 	
 	private boolean bungeeModeEnabled;
 	private String bungeeServerName;
@@ -238,81 +237,81 @@ public class Config {
 		glassOptionsMenuSlot = SkyWarsReloaded.get().getConfig().getInt("gameItems.glassOptionsMenuSlot");
 		
 		String specItem = SkyWarsReloaded.get().getConfig().getString("gameItems.spectateItem");
-		List<String> specItemData = new LinkedList<String>(Arrays.asList(specItem.split(" ")));
+		List<String> specItemData = new LinkedList<>(Arrays.asList(specItem.split(" ")));
 		String name = "name:" + new Messaging.MessageFormatter().format("menu.spectategame-item-name");
 		specItemData.add(name);
 		spectateItem = ItemUtils.parseItem(specItemData);
 		
 		String specPlayerItem = SkyWarsReloaded.get().getConfig().getString("gameItems.spectateItem");
-		List<String> specPlayerItemData = new LinkedList<String>(Arrays.asList(specPlayerItem.split(" ")));
+		List<String> specPlayerItemData = new LinkedList<>(Arrays.asList(specPlayerItem.split(" ")));
 		String specPlayerName = "name:" + new Messaging.MessageFormatter().format("menu.spectate-item-name");
 		specPlayerItemData.add(specPlayerName);
 		spectatePlayerItem = ItemUtils.parseItem(specPlayerItemData);
 		
 		String joinItemName = SkyWarsReloaded.get().getConfig().getString("gameItems.joinItem");
-		List<String> joinItemData = new LinkedList<String>(Arrays.asList(joinItemName.split(" ")));
+		List<String> joinItemData = new LinkedList<>(Arrays.asList(joinItemName.split(" ")));
 		String joinName = "name:" + new Messaging.MessageFormatter().format("menu.join-item-name");
 		joinItemData.add(joinName);
 		joinItem = ItemUtils.parseItem(joinItemData);
 		
 		String kitItemName = SkyWarsReloaded.get().getConfig().getString("gameItems.kitMenuItem");
-		List<String> kitItemData = new LinkedList<String>(Arrays.asList(kitItemName.split(" ")));
+		List<String> kitItemData = new LinkedList<>(Arrays.asList(kitItemName.split(" ")));
 		String kitName = "name:" + new Messaging.MessageFormatter().format("menu.kit-item-name");
 		kitItemData.add(kitName);
 		kitMenuItem = ItemUtils.parseItem(kitItemData);
 		
 		String exitItem = SkyWarsReloaded.get().getConfig().getString("gameItems.exitGameItem");
-		List<String> exitItemData = new LinkedList<String>(Arrays.asList(exitItem.split(" ")));
+		List<String> exitItemData = new LinkedList<>(Arrays.asList(exitItem.split(" ")));
 		String exitName = "name:" + new Messaging.MessageFormatter().format("menu.returntospawn-item-name");
 		exitItemData.add(exitName);
 		exitGameItem = ItemUtils.parseItem(exitItemData);
 		
 		String optionsItemName = SkyWarsReloaded.get().getConfig().getString("gameItems.optionsItem");
-		List<String> optionsItemData = new LinkedList<String>(Arrays.asList(optionsItemName.split(" ")));
+		List<String> optionsItemData = new LinkedList<>(Arrays.asList(optionsItemName.split(" ")));
 		String optionsName = "name:" + new Messaging.MessageFormatter().format("menu.options-item-name");
 		optionsItemData.add(optionsName);
 		optionsItem = ItemUtils.parseItem(optionsItemData);
 		
 		String lobbyMenuItemName = SkyWarsReloaded.get().getConfig().getString("gameItems.lobbyMenuItem");
-		List<String> lobbyMenuItemData = new LinkedList<String>(Arrays.asList(lobbyMenuItemName.split(" ")));
+		List<String> lobbyMenuItemData = new LinkedList<>(Arrays.asList(lobbyMenuItemName.split(" ")));
 		String lobbyMenuName = "name:" + new Messaging.MessageFormatter().format("menu.lobbymenu-item-name");
 		lobbyMenuItemData.add(lobbyMenuName);
 		lobbyMenuItem = ItemUtils.parseItem(lobbyMenuItemData);
 		
 		String opVoteItem = SkyWarsReloaded.get().getConfig().getString("gameItems.opChestMenuItem");
-		List<String> opVoteItemData = new LinkedList<String>(Arrays.asList(opVoteItem.split(" ")));
+		List<String> opVoteItemData = new LinkedList<>(Arrays.asList(opVoteItem.split(" ")));
 		opChestMenuItem = ItemUtils.parseItem(opVoteItemData);
 		
 		String timeVoteItem = SkyWarsReloaded.get().getConfig().getString("gameItems.timeMenuItem");
-		List<String> timeVoteItemData = new LinkedList<String>(Arrays.asList(timeVoteItem.split(" ")));
+		List<String> timeVoteItemData = new LinkedList<>(Arrays.asList(timeVoteItem.split(" ")));
 		timeMenuItem = ItemUtils.parseItem(timeVoteItemData);
 		
 		String jumpVoteItem = SkyWarsReloaded.get().getConfig().getString("gameItems.jumpMenuItem");
-		List<String> jumpVoteItemData = new LinkedList<String>(Arrays.asList(jumpVoteItem.split(" ")));
+		List<String> jumpVoteItemData = new LinkedList<>(Arrays.asList(jumpVoteItem.split(" ")));
 		jumpMenuItem = ItemUtils.parseItem(jumpVoteItemData);
 		
 		String colorItem = SkyWarsReloaded.get().getConfig().getString("gameItems.glassMenuItem");
-		List<String> colorItemData = new LinkedList<String>(Arrays.asList(colorItem.split(" ")));
+		List<String> colorItemData = new LinkedList<>(Arrays.asList(colorItem.split(" ")));
 		glassMenuItem = ItemUtils.parseItem(colorItemData);
 		
 		String particleItem = SkyWarsReloaded.get().getConfig().getString("gameItems.particleMenuItem");
-		List<String> particleItemData = new LinkedList<String>(Arrays.asList(particleItem.split(" ")));
+		List<String> particleItemData = new LinkedList<>(Arrays.asList(particleItem.split(" ")));
 		particleMenuItem = ItemUtils.parseItem(particleItemData);
 		
 		String projEffectItem = SkyWarsReloaded.get().getConfig().getString("gameItems.trailEffectMenuItem");
-		List<String> projEffectItemData = new LinkedList<String>(Arrays.asList(projEffectItem.split(" ")));
+		List<String> projEffectItemData = new LinkedList<>(Arrays.asList(projEffectItem.split(" ")));
 		trailEffectMenuItem = ItemUtils.parseItem(projEffectItemData);
 		
 		String weatherItem = SkyWarsReloaded.get().getConfig().getString("gameItems.weatherMenuItem");
-		List<String> weatherItemData = new LinkedList<String>(Arrays.asList(weatherItem.split(" ")));
+		List<String> weatherItemData = new LinkedList<>(Arrays.asList(weatherItem.split(" ")));
 		weatherMenuItem = ItemUtils.parseItem(weatherItemData);
 		
 		String permKitItem = SkyWarsReloaded.get().getConfig().getString("gameItems.kitPermMenuItem");
-		List<String> permKitItemData = new LinkedList<String>(Arrays.asList(permKitItem.split(" ")));
+		List<String> permKitItemData = new LinkedList<>(Arrays.asList(permKitItem.split(" ")));
 		kitPermMenuItem = ItemUtils.parseItem(permKitItemData);
 		
 		String specShItem = SkyWarsReloaded.get().getConfig().getString("gameItems.specStoreItem");
-		List<String> specShopItemData = new LinkedList<String>(Arrays.asList(specShItem.split(" ")));
+		List<String> specShopItemData = new LinkedList<>(Arrays.asList(specShItem.split(" ")));
 		String specShopName = "name:" + new Messaging.MessageFormatter().format("menu.spectateshop-item-name");
 		specShopItemData.add(specShopName);
 		specStoreItem = ItemUtils.parseItem(specShopItemData);
@@ -356,7 +355,7 @@ public class Config {
 	}
 	
 	public void setSpawn(Location loc) {
-		world = loc.getWorld().getName().toString();
+		world = loc.getWorld().getName();
 		x = loc.getBlockX();
 		y = loc.getBlockY();
 		z = loc.getBlockZ();
@@ -385,52 +384,31 @@ public class Config {
 	}
 	
 	public boolean hungerDisabled() {
-		if (lobbyGuard) {
-			return hungerDisabled;
-		}
-		return false;
+		return lobbyGuard && hungerDisabled;
 	}
 	
 	public boolean damageDisabled() {
-		if (lobbyGuard) {
-			return damageDisabled;
-		}
-		return false;
+		return lobbyGuard && damageDisabled;
 	}
 	
 	public boolean pvpDisabled() {
-		if (lobbyGuard) {
-			return pvpDisabled;
-		}
-		return false;
+		return lobbyGuard && pvpDisabled;
 	}
 	
 	public boolean playerBuildDisabled() {
-		if (lobbyGuard) {
-			return playerBuildDisabled;
-		}
-		return false;
+		return lobbyGuard && playerBuildDisabled;
 	}
 	
 	public boolean playerInteractDisabled() {
-		if (lobbyGuard) {
-			return playerInteractDisabled;
-		}
-		return false;
+		return lobbyGuard && playerInteractDisabled;
 	}
 	
 	public boolean weatherDisabled() {
-		if (lobbyGuard) {
-			return weatherDisabled;
-		}
-		return false;
+		return lobbyGuard && weatherDisabled;
 	}
 	
 	public boolean daylightCycleDisabled() {
-		if (lobbyGuard) {
-			return daylightCycleDisabled;
-		}
-		return false;
+		return lobbyGuard && daylightCycleDisabled;
 	}
 	
 	public List<String> getSpectatorWhiteList() {
@@ -833,10 +811,7 @@ public class Config {
 	}
 	
 	public boolean LobbyFallDamageDisabled() {
-		if (lobbyGuard) {
-			return fallDamageDisabled;
-		}
-		return false;
+		return lobbyGuard && fallDamageDisabled;
 	}
 	
 	public boolean bungeeEnabled() {
@@ -1028,7 +1003,7 @@ public class Config {
 		
 		if (lobbyMenuItem == null) {
 			String lobbyMenuItemName = "eye_of_ender 1 luck:1";
-			List<String> lobbyMenuItemData = new LinkedList<String>(Arrays.asList(lobbyMenuItemName.split(" ")));
+			List<String> lobbyMenuItemData = new LinkedList<>(Arrays.asList(lobbyMenuItemName.split(" ")));
 			String lobbyMenuName = "name:" + new Messaging.MessageFormatter().format("menu.lobbymenu-item-name");
 			lobbyMenuItemData.add(lobbyMenuName);
 			lobbyMenuItem = ItemUtils.parseItem(lobbyMenuItemData);
@@ -1037,7 +1012,7 @@ public class Config {
 		
 		if (spectateItem == null) {
 			String specItem = "compass 1 luck:1";
-			List<String> specItemData = new LinkedList<String>(Arrays.asList(specItem.split(" ")));
+			List<String> specItemData = new LinkedList<>(Arrays.asList(specItem.split(" ")));
 			String name = "name:" + new Messaging.MessageFormatter().format("menu.spectategame-item-name");
 			specItemData.add(name);
 			spectateItem = ItemUtils.parseItem(specItemData);
@@ -1046,7 +1021,7 @@ public class Config {
 
 		if (spectatePlayerItem == null) {
 			String specPlayerItem = "compass 1 luck:1";
-			List<String> specPlayerItemData = new LinkedList<String>(Arrays.asList(specPlayerItem.split(" ")));
+			List<String> specPlayerItemData = new LinkedList<>(Arrays.asList(specPlayerItem.split(" ")));
 			String specPlayerName = "name:" + new Messaging.MessageFormatter().format("menu.spectate-item-name");
 			specPlayerItemData.add(specPlayerName);
 			spectatePlayerItem = ItemUtils.parseItem(specPlayerItemData);
@@ -1055,7 +1030,7 @@ public class Config {
 
 		if (joinItem == null) {
 			String joinItemName = "daylight_detector 1 luck:1";
-			List<String> joinItemData = new LinkedList<String>(Arrays.asList(joinItemName.split(" ")));
+			List<String> joinItemData = new LinkedList<>(Arrays.asList(joinItemName.split(" ")));
 			String joinName = "name:" + new Messaging.MessageFormatter().format("menu.join-item-name");
 			joinItemData.add(joinName);
 			joinItem = ItemUtils.parseItem(joinItemData);
@@ -1064,21 +1039,21 @@ public class Config {
 		
 		if (kitMenuItem == null) {
 			String kitItemName = "storage_minecart 1 luck:1";
-			List<String> kitItemData = new LinkedList<String>(Arrays.asList(kitItemName.split(" ")));
+			List<String> kitItemData = new LinkedList<>(Arrays.asList(kitItemName.split(" ")));
 			kitMenuItem = ItemUtils.parseItem(kitItemData);
 			SkyWarsReloaded.get().getLogger().info("kitMenuItem in config is not valid, using default item");
 		}
 		
 		if (exitGameItem == null) {
 			String exitItem = "iron_door 1 luck:1";
-			List<String> exitItemData = new LinkedList<String>(Arrays.asList(exitItem.split(" ")));
+			List<String> exitItemData = new LinkedList<>(Arrays.asList(exitItem.split(" ")));
 			exitGameItem = ItemUtils.parseItem(exitItemData);
 			SkyWarsReloaded.get().getLogger().info("exitGameItem in config is not valid, using default item");
 		}
 		
 		if (optionsItem == null) {
 			String optionsItemName = "cake 1 luck:1";
-			List<String> optionsItemData = new LinkedList<String>(Arrays.asList(optionsItemName.split(" ")));
+			List<String> optionsItemData = new LinkedList<>(Arrays.asList(optionsItemName.split(" ")));
 			String optionsName = "name:" + new Messaging.MessageFormatter().format("menu.options-item-name");
 			optionsItemData.add(optionsName);
 			optionsItem = ItemUtils.parseItem(optionsItemData);
@@ -1087,63 +1062,63 @@ public class Config {
 		
 		if (opChestMenuItem == null) {
 			String opVoteItem = "diamond 1";
-			List<String> opVoteItemData = new LinkedList<String>(Arrays.asList(opVoteItem.split(" ")));
+			List<String> opVoteItemData = new LinkedList<>(Arrays.asList(opVoteItem.split(" ")));
 			opChestMenuItem = ItemUtils.parseItem(opVoteItemData);
 			SkyWarsReloaded.get().getLogger().info("opChestMenuItem in config is not valid, using default item");
 		}
 
 		if (timeMenuItem == null) {
 			String timeVoteItem = "watch 1";
-			List<String> timeVoteItemData = new LinkedList<String>(Arrays.asList(timeVoteItem.split(" ")));
+			List<String> timeVoteItemData = new LinkedList<>(Arrays.asList(timeVoteItem.split(" ")));
 			timeMenuItem = ItemUtils.parseItem(timeVoteItemData);
 			SkyWarsReloaded.get().getLogger().info("timeMenuItem in config is not valid, using default item");
 		}
 		
 		if (jumpMenuItem == null) {
 			String jumpVoteItem = "diamond_boots 1";
-			List<String> jumpVoteItemData = new LinkedList<String>(Arrays.asList(jumpVoteItem.split(" ")));
+			List<String> jumpVoteItemData = new LinkedList<>(Arrays.asList(jumpVoteItem.split(" ")));
 			jumpMenuItem = ItemUtils.parseItem(jumpVoteItemData);
 			SkyWarsReloaded.get().getLogger().info("jumpMenuItem in config is not valid, using default item");
 		}
 		
 		if (glassMenuItem == null) {
 			String colorItem = "stained_glass 1";
-			List<String> colorItemData = new LinkedList<String>(Arrays.asList(colorItem.split(" ")));
+			List<String> colorItemData = new LinkedList<>(Arrays.asList(colorItem.split(" ")));
 			glassMenuItem = ItemUtils.parseItem(colorItemData);
 			SkyWarsReloaded.get().getLogger().info("glassMenuItem in config is not valid, using default item");
 		}
 		
 		if (particleMenuItem == null) {
 			String particleItem = "pumpkin_seeds 1";
-			List<String> particleItemData = new LinkedList<String>(Arrays.asList(particleItem.split(" ")));
+			List<String> particleItemData = new LinkedList<>(Arrays.asList(particleItem.split(" ")));
 			particleMenuItem = ItemUtils.parseItem(particleItemData);
 			SkyWarsReloaded.get().getLogger().info("particleMenuItem in config is not valid, using default item");
 		}
 		
 		if (trailEffectMenuItem == null) {
 			String projEffectItem = "arrow 1";
-			List<String> projEffectItemData = new LinkedList<String>(Arrays.asList(projEffectItem.split(" ")));
+			List<String> projEffectItemData = new LinkedList<>(Arrays.asList(projEffectItem.split(" ")));
 			trailEffectMenuItem = ItemUtils.parseItem(projEffectItemData);
 			SkyWarsReloaded.get().getLogger().info("trailEffectMenuItem in config is not valid, using default item");
 		}
 
 		if (weatherMenuItem == null) {
 			String weatherItem = "glowstone 1";
-			List<String> weatherItemData = new LinkedList<String>(Arrays.asList(weatherItem.split(" ")));
+			List<String> weatherItemData = new LinkedList<>(Arrays.asList(weatherItem.split(" ")));
 			weatherMenuItem = ItemUtils.parseItem(weatherItemData);
 			SkyWarsReloaded.get().getLogger().info("weatherMenuItem in config is not valid, using default item");
 		}
 
 		if (kitPermMenuItem == null) {
 			String permKitItem = "storage_minecart 1";
-			List<String> permKitItemData = new LinkedList<String>(Arrays.asList(permKitItem.split(" ")));
+			List<String> permKitItemData = new LinkedList<>(Arrays.asList(permKitItem.split(" ")));
 			kitPermMenuItem = ItemUtils.parseItem(permKitItemData);
 			SkyWarsReloaded.get().getLogger().info("kitPermMenuItem in config is not valid, using default item");
 		}
 
 		if (specStoreItem == null) {
 			String specShItem = "anvil 1 luck:1";
-			List<String> specShopItemData = new LinkedList<String>(Arrays.asList(specShItem.split(" ")));
+			List<String> specShopItemData = new LinkedList<>(Arrays.asList(specShItem.split(" ")));
 			String specShopName = "name:" + new Messaging.MessageFormatter().format("menu.spectateshop-item-name");
 			specShopItemData.add(specShopName);
 			specStoreItem = ItemUtils.parseItem(specShopItemData);
@@ -1151,42 +1126,42 @@ public class Config {
 		}
 		
 		if (playerJoinLobby == null) {
-			playerJoinLobby =  Sound.SLIME_WALK2;
+			playerJoinLobby =  Sound.BLOCK_SLIME_STEP;
 			SkyWarsReloaded.get().getLogger().info("playerJoinLobby sound in config is not valid, using default sound");
 		}
 		
 		if (playerLeaveLobby == null) {
-			playerLeaveLobby =  Sound.SLIME_ATTACK;
+			playerLeaveLobby =  Sound.ENTITY_SLIME_ATTACK;
 			SkyWarsReloaded.get().getLogger().info("playerLeaveLobby sound in config is not valid, using default sound");
 		}
 		
 		if (playerDeath == null) {
-			playerDeath =  Sound.AMBIENCE_THUNDER;
+			playerDeath =  Sound.ENTITY_LIGHTNING_THUNDER;
 			SkyWarsReloaded.get().getLogger().info("playerDeath sound in config is not valid, using default sound");
 		}
 		
 		if (playerWin == null) {
-			playerWin =  Sound.FIREWORK_LARGE_BLAST;
+			playerWin =  Sound.ENTITY_FIREWORK_LARGE_BLAST;
 			SkyWarsReloaded.get().getLogger().info("playerWin sound in config is not valid, using default sound");
 		}
 		
 		if (opChestVote == null) {
-			opChestVote =  Sound.CHEST_OPEN;
+			opChestVote =  Sound.BLOCK_CHEST_OPEN;
 			SkyWarsReloaded.get().getLogger().info("opChestVote sound in config is not valid, using default sound");
 		}
 		
 		if (timeVote == null) {
-			timeVote =  Sound.FUSE;
+			timeVote =  Sound.ENTITY_CREEPER_PRIMED;
 			SkyWarsReloaded.get().getLogger().info("timeVote sound in config is not valid, using default sound");
 		}
 		
 		if (weatherVote == null) {
-			weatherVote =  Sound.SPLASH;
+			weatherVote =  Sound.ENTITY_GENERIC_SPLASH;
 			SkyWarsReloaded.get().getLogger().info("weatherVote sound in config is not valid, using default sound");
 		}
 		
 		if (jumpVote == null) {
-			jumpVote =  Sound.MAGMACUBE_JUMP;
+			jumpVote =  Sound.ENTITY_MAGMACUBE_JUMP;
 			SkyWarsReloaded.get().getLogger().info("jumpVote sound in config is not valid, using default sound");
 		}
 	}

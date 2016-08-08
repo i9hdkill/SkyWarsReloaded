@@ -1,8 +1,10 @@
 package com.walrusone.skywars.menus;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.game.Game;
+import com.walrusone.skywars.game.GamePlayer;
+import com.walrusone.skywars.utilities.IconMenu;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,11 +12,9 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.game.Game;
-import com.walrusone.skywars.game.GamePlayer;
-import com.walrusone.skywars.utilities.IconMenu;
-import com.walrusone.skywars.utilities.Messaging;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SpecPlayerMenu {
 
@@ -23,49 +23,40 @@ public class SpecPlayerMenu {
 	private static final String menuName = new Messaging.MessageFormatter().format("menu.spectate-menu-title");
 
 	public SpecPlayerMenu(final GamePlayer gamePlayer) {
-        List<Player> availablePlayers = new ArrayList<Player>();
+        List<Player> availablePlayers = new ArrayList<>();
         Game game;
         
     	game = gamePlayer.getSpecGame();
-        
-        for (GamePlayer gPlayer: game.getPlayers()) {
-        	if (gPlayer.getP() != null) {
-        		availablePlayers.add(gPlayer.getP());
-        	}
-        }
+
+        availablePlayers.addAll(game.getPlayers().stream().filter(gPlayer -> gPlayer.getP() != null).map(GamePlayer::getP).collect(Collectors.toList()));
 
         int rowCount = menuSlotsPerRow;
         while (rowCount < game.getNumberOfSpawns() && rowCount < menuSize) {
             rowCount += menuSlotsPerRow;
         }
 
-        SkyWarsReloaded.getIC().create(gamePlayer.getP(), menuName, rowCount, new IconMenu.OptionClickEventHandler() {
-            @Override
-            public void onOptionClick(IconMenu.OptionClickEvent event) {
-            	String name = ChatColor.stripColor(event.getName());
-                @SuppressWarnings("deprecation")
-				Player player = SkyWarsReloaded.get().getServer().getPlayer(name);
-                if (player == null) {
-                    return;
-                }
-                
-                event.setWillClose(true);
-                event.setWillDestroy(true);
-                
-                if (player != null) {
-	                if (SkyWarsReloaded.getPC().getPlayer(player.getUniqueId()).inGame()) {
-	                	if (gamePlayer.getP().getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
-			                gamePlayer.getP().teleport(player.getLocation(), TeleportCause.PLUGIN);
-	                	} else {
-		                	gamePlayer.getP().sendMessage(new Messaging.MessageFormatter().format("error.player-not-playing"));
-	                	}
-	                } else {
-	                	gamePlayer.getP().sendMessage(new Messaging.MessageFormatter().format("error.player-not-playing"));
-	                }
-                }
-                SkyWarsReloaded.getIC().destroy(gamePlayer.getP());
-
+        SkyWarsReloaded.getIC().create(gamePlayer.getP(), menuName, rowCount, event -> {
+            String name = ChatColor.stripColor(event.getName());
+            @SuppressWarnings("deprecation")
+            Player player = SkyWarsReloaded.get().getServer().getPlayer(name);
+            if (player == null) {
+                return;
             }
+
+            event.setWillClose(true);
+            event.setWillDestroy(true);
+
+            if (SkyWarsReloaded.getPC().getPlayer(player.getUniqueId()).inGame()) {
+                if (gamePlayer.getP().getWorld().getName().equalsIgnoreCase(player.getWorld().getName())) {
+                    gamePlayer.getP().teleport(player.getLocation(), TeleportCause.PLUGIN);
+                } else {
+                    gamePlayer.getP().sendMessage(new Messaging.MessageFormatter().format("error.player-not-playing"));
+                }
+            } else {
+                gamePlayer.getP().sendMessage(new Messaging.MessageFormatter().format("error.player-not-playing"));
+            }
+            SkyWarsReloaded.getIC().destroy(gamePlayer.getP());
+
         });
         
 

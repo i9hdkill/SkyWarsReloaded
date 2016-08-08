@@ -1,16 +1,15 @@
 package com.walrusone.skywars.controllers;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.UUID;
-
+import com.google.common.collect.Maps;
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.game.GamePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.google.common.collect.Maps;
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.game.GamePlayer;
+import java.util.Collection;
+import java.util.Map;
+import java.util.UUID;
 
 public class PlayerController {
 
@@ -27,20 +26,18 @@ public class PlayerController {
             final GamePlayer gamePlayer = new GamePlayer(uuid);
             onlinePlayers.put(uuid, gamePlayer);
             if (SkyWarsReloaded.getCfg().LobbyScoreboardEnabeld()) {
-                SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    		        public void run() {
-    		        	if (gamePlayer.getP() != null) {
-        		        	String world = gamePlayer.getP().getWorld().getName();
-        		        	Location spawn = SkyWarsReloaded.getCfg().getSpawn();
-        		        	if (spawn != null) {
-            		        	String lobbyWorld = spawn.getWorld().getName();
-            		    		if (world.equalsIgnoreCase(lobbyWorld)) {
-            			        	SkyWarsReloaded.getScore().getScoreboard(gamePlayer.getP());
-            		    		}
-        		        	}
-    		        	}
-    			   }
-                }, 5);
+                SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> {
+                    if (gamePlayer.getP() != null) {
+                        String world = gamePlayer.getP().getWorld().getName();
+                        Location spawn = SkyWarsReloaded.getCfg().getSpawn();
+                        if (spawn != null) {
+                            String lobbyWorld = spawn.getWorld().getName();
+                            if (world.equalsIgnoreCase(lobbyWorld)) {
+                                SkyWarsReloaded.getScore().getScoreboard(gamePlayer.getP());
+                            }
+                        }
+                    }
+               }, 5);
             }
         }
     }

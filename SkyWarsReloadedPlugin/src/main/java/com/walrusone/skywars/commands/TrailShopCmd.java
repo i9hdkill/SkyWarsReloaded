@@ -1,15 +1,14 @@
 package com.walrusone.skywars.commands;
 
-import org.bukkit.Location;
-
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.menus.BuyProjEffectMenu;
 import com.walrusone.skywars.utilities.Messaging;
+import org.bukkit.Location;
 
-public class TrailShopCmd extends BaseCmd { 
+class TrailShopCmd extends BaseCmd {
 	
-	public TrailShopCmd() {
+	TrailShopCmd() {
 		forcePlayer = true;
 		cmdName = "trailshop";
 		argLength = 1; //counting cmdName

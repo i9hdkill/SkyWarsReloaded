@@ -2,13 +2,13 @@ package com.walrusone.skywars.commands;
 
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.Game;
-import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.game.Game.GameState;
+import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.utilities.Messaging;
 
-public class StartCmd extends BaseCmd { 
+class StartCmd extends BaseCmd {
 	
-	public StartCmd() {
+	StartCmd() {
 		forcePlayer = true;
 		cmdName = "start";
 		argLength = 1; //counting cmdName

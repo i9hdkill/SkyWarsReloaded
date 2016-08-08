@@ -1,13 +1,12 @@
 package com.walrusone.skywars.utilities;
 
+import com.walrusone.skywars.SkyWarsReloaded;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-
-import com.walrusone.skywars.SkyWarsReloaded;
 
 // https://forums.bukkit.org/threads/icon-menu.108342/
 public class IconMenu {
@@ -108,7 +107,7 @@ public class IconMenu {
         private boolean close;
         private boolean destroy;
 
-        public OptionClickEvent(Player player, String name) {
+        OptionClickEvent(Player player, String name) {
             this.player = player;
             this.name = name;
             this.close = false;

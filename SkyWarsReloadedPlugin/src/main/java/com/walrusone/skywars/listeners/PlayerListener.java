@@ -1,22 +1,23 @@
 package com.walrusone.skywars.listeners;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Random;
-
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.game.Game;
+import com.walrusone.skywars.game.Game.GameState;
+import com.walrusone.skywars.game.GamePlayer;
+import com.walrusone.skywars.menus.JoinMenu;
+import com.walrusone.skywars.menus.KitMenu;
+import com.walrusone.skywars.menus.LobbyMainMenu;
+import com.walrusone.skywars.menus.MainMenu;
+import com.walrusone.skywars.menus.SpecGameMenu;
+import com.walrusone.skywars.utilities.BungeeUtil;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Egg;
-import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Snowball;
-import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -41,17 +42,10 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.game.Game;
-import com.walrusone.skywars.game.GamePlayer;
-import com.walrusone.skywars.game.Game.GameState;
-import com.walrusone.skywars.menus.JoinMenu;
-import com.walrusone.skywars.menus.KitMenu;
-import com.walrusone.skywars.menus.LobbyMainMenu;
-import com.walrusone.skywars.menus.MainMenu;
-import com.walrusone.skywars.menus.SpecGameMenu;
-import com.walrusone.skywars.utilities.BungeeUtil;
-import com.walrusone.skywars.utilities.Messaging;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Random;
 
 public class PlayerListener implements Listener {
 	
@@ -59,7 +53,7 @@ public class PlayerListener implements Listener {
 	public void onFoodChange(FoodLevelChangeEvent e) {
 		 Entity ent = e.getEntity();
 		if(ent instanceof Player) {
-			 GamePlayer hungry = SkyWarsReloaded.getPC().getPlayer(((Player) ent).getUniqueId());
+			 GamePlayer hungry = SkyWarsReloaded.getPC().getPlayer(ent.getUniqueId());
 			 if (hungry.inGame()) {
 				 Game game = hungry.getGame();
 				 if (game != null) {
@@ -75,7 +69,7 @@ public class PlayerListener implements Listener {
 	public void onEntityDamageEntity(EntityDamageByEntityEvent e) {
 		 Entity ent = e.getEntity();
 		 if(ent instanceof Player) {
-			 GamePlayer target = SkyWarsReloaded.getPC().getPlayer(((Player) ent).getUniqueId());
+			 GamePlayer target = SkyWarsReloaded.getPC().getPlayer(ent.getUniqueId());
 			 if (target.inGame()) {
 				Entity damager = e.getDamager();
 				if (damager instanceof Projectile) {
@@ -83,12 +77,10 @@ public class PlayerListener implements Listener {
 					if (proj.getShooter() instanceof Player) {
 						GamePlayer killer = SkyWarsReloaded.getPC().getPlayer(((Player) proj.getShooter()).getUniqueId());
 						target.setTagged(killer);
-						return;
 					}
 				} else if (damager instanceof Player) {
-					GamePlayer killer = SkyWarsReloaded.getPC().getPlayer(((Player) damager).getUniqueId());
+					GamePlayer killer = SkyWarsReloaded.getPC().getPlayer(damager.getUniqueId());
 					target.setTagged(killer);
-					return;
 				}
 			 }
 		 }
@@ -103,17 +95,15 @@ public class PlayerListener implements Listener {
 			if (spawn != null) {
 				e.getPlayer().teleport(spawn, TeleportCause.PLUGIN);
 				final Player player = e.getPlayer();
-				SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-					public void run() {
-						for (PotionEffect effect : player.getActivePotionEffects()) {
-					        player.removePotionEffect(effect.getType());
-						}
-						player.setFireTicks(0);
-						
-						player.setAllowFlight(false);
-						player.setFlying(false);
-					}
-				}, 5L);
+				SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> {
+                    for (PotionEffect effect : player.getActivePotionEffects()) {
+                        player.removePotionEffect(effect.getType());
+                    }
+                    player.setFireTicks(0);
+
+                    player.setAllowFlight(false);
+                    player.setFlying(false);
+                }, 5L);
 			}
 		}
 		if (SkyWarsReloaded.getCfg().clearInventoryOnJoin()) {
@@ -136,16 +126,14 @@ public class PlayerListener implements Listener {
 		}
 		final Player player = e.getPlayer();
 		if (SkyWarsReloaded.getCfg().bungeeEnabled()) {
-			SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-				public void run() {
-					Game game = SkyWarsReloaded.getGC().getGame(1);
-					if (!game.isFull() && game.getState() == GameState.PREGAME) {
-						game.addPlayer(SkyWarsReloaded.getPC().getPlayer(player.getUniqueId()));
-					} else {
-						BungeeUtil.connectToServer(player, SkyWarsReloaded.getCfg().getLobbyServer());
-					}
-				}
-			}, 5L);
+			SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> {
+                Game game = SkyWarsReloaded.getGC().getGame(1);
+                if (!game.isFull() && game.getState() == GameState.PREGAME) {
+                    game.addPlayer(SkyWarsReloaded.getPC().getPlayer(player.getUniqueId()));
+                } else {
+                    BungeeUtil.connectToServer(player, SkyWarsReloaded.getCfg().getLobbyServer());
+                }
+            }, 5L);
 		} else  {
 			if (inLobbyWorld(player)) {
 				SkyWarsReloaded.getNMS().sendTitle(player, 20, 60, 20, SkyWarsReloaded.getMessaging().getMessage("titles.joinServerTitle"), SkyWarsReloaded.getMessaging().getMessage("titles.joinServerSubtitle"));
@@ -161,16 +149,14 @@ public class PlayerListener implements Listener {
 		Player player = e.getPlayer();
 		final GamePlayer gPlayer = SkyWarsReloaded.getPC().getPlayer(e.getPlayer().getUniqueId());
 		if (gPlayer.isSpectating()) {
-			SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-		        public void run() {
-		        	if (gPlayer.getP() != null) {
-		        		if (gPlayer.getSpecGame() != null) {
-							gPlayer.spectateMode(true, gPlayer.getSpecGame(), gPlayer.getSpecGame().getSpawn(), false);
-							gPlayer.getP().sendMessage(new Messaging.MessageFormatter().withPrefix().format("game.spectating"));
-		        		}
-		        	}
-		        }
-		      }, 3);
+			SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> {
+                if (gPlayer.getP() != null) {
+                    if (gPlayer.getSpecGame() != null) {
+                        gPlayer.spectateMode(true, gPlayer.getSpecGame(), gPlayer.getSpecGame().getSpawn(), false);
+                        gPlayer.getP().sendMessage(new Messaging.MessageFormatter().withPrefix().format("game.spectating"));
+                    }
+                }
+            }, 3);
 		} else {
 			if (inLobbyWorld(player)) {
 				givePlayerItems(player);
@@ -211,9 +197,7 @@ public class PlayerListener implements Listener {
 					}
 				}
 			}
-			if (cAllow) {
-				return;
-			} else {
+			if (!cAllow) {
 				e.setCancelled(true);
 				gPlayer.getP().sendMessage(new Messaging.MessageFormatter().format("error.no-perm-in-game"));
 			}
@@ -228,9 +212,7 @@ public class PlayerListener implements Listener {
 					}
 				}
 			}
-			if (cAllow) {
-				return;
-			} else {
+			if (!cAllow) {
 				e.setCancelled(true);
 				gPlayer.getP().sendMessage(new Messaging.MessageFormatter().format("error.no-perm-spectating"));
 			}
@@ -376,7 +358,7 @@ public class PlayerListener implements Listener {
 		
 	}
 	
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onInventoryClick(InventoryClickEvent e) {
 		ItemStack item = e.getCurrentItem();
 		if (item != null) {
@@ -525,7 +507,7 @@ public class PlayerListener implements Listener {
                 	} 
             	}
             	String colorMessage = ChatColor.translateAlternateColorCodes('&', event.getMessage());
-            	String message = "";
+            	String message;
             	if (gPlayer.getP().hasPermission("swr.color")) {
                 	message = colorMessage;
             	} else {
@@ -543,20 +525,18 @@ public class PlayerListener implements Listener {
             		score = ChatColor.GREEN + "(+" + gPlayer.getScore() + ")";
             	}
            		event.setCancelled(true);
-           		if (gPlayer != null) {
-               		World world = gPlayer.getP().getWorld();
-               		if (world != null) {
-                   		for (Player p: world.getPlayers()) {
-                			p.sendMessage(new Messaging.MessageFormatter()
-            				.setVariable("score", score)
-            				.setVariable("prefix", prefix)
-            				.setVariable("player", name)
-            				.setVariable("message", message)
-            				.format("chat"));
-                   		}
-               		}
-           		}
-    		}
+				World world = gPlayer.getP().getWorld();
+				if (world != null) {
+                    for (Player p: world.getPlayers()) {
+                     p.sendMessage(new Messaging.MessageFormatter()
+                     .setVariable("score", score)
+                     .setVariable("prefix", prefix)
+                     .setVariable("player", name)
+                     .setVariable("message", message)
+                     .format("chat"));
+                    }
+                }
+			}
 		}
     }
     
@@ -638,7 +618,7 @@ public class PlayerListener implements Listener {
             }
     }
     
-	public void givePlayerItems(Player p) {
+	private void givePlayerItems(Player p) {
 		if (SkyWarsReloaded.getCfg().giveSpectateItem()) {
 			if (p.hasPermission("swr.spectate")) {
 				p.getInventory().setItem(SkyWarsReloaded.getCfg().getSpectateItemSlot(), SkyWarsReloaded.getCfg().getSpectateItem());
@@ -653,7 +633,7 @@ public class PlayerListener implements Listener {
 		SkyWarsReloaded.getScore().getScoreboard(p);
 	}
 	
-	public void removePlayerItems(Player player) {
+	private void removePlayerItems(Player player) {
 		if (!SkyWarsReloaded.getPC().getPlayer(player.getUniqueId()).inGame()) {
 			player.getInventory().remove(SkyWarsReloaded.getCfg().getSpectateItem());
 			player.getInventory().remove(SkyWarsReloaded.getCfg().getJoinItem());
@@ -664,17 +644,9 @@ public class PlayerListener implements Listener {
 		}
 	}
 	
-	public boolean inLobbyWorld(Player p) {
+	private boolean inLobbyWorld(Player p) {
 		Location spawn = SkyWarsReloaded.getCfg().getSpawn();
-		if (spawn != null) {
-			if (spawn.getWorld().equals(p.getWorld())) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
+		return spawn != null && spawn.getWorld().equals(p.getWorld());
 	}
     
 }

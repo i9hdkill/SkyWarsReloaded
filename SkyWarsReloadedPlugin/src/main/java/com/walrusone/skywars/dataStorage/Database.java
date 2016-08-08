@@ -1,5 +1,9 @@
 package com.walrusone.skywars.dataStorage;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+import com.walrusone.skywars.SkyWarsReloaded;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -9,10 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
-import com.walrusone.skywars.SkyWarsReloaded;
 
 public class Database {
 
@@ -65,7 +65,7 @@ public class Database {
 	        return connection;
 	    }
 
-	    public void close() {
+	    private void close() {
 	        try {
 	            if (connection != null && !connection.isClosed()) {
 	                connection.close();
@@ -78,7 +78,7 @@ public class Database {
 	        connection = null;
 	    }
 
-	    public boolean checkConnection() {
+	    boolean checkConnection() {
 	        try {
 	            connect();
 
@@ -121,8 +121,8 @@ public class Database {
 	        } finally {
 	            connection.setAutoCommit(true);
 
-	            if (statement != null && !statement.isClosed()) {
-	                statement.close();
+	            if ((statement != null) && !statement.isClosed()) {
+	                statement.close(); //TODO handle exception
 	            }
 	        }
 	    }
@@ -142,8 +142,8 @@ public class Database {
 		        } finally {
 		            connection.setAutoCommit(true);
 
-		            if (statement != null && !statement.isClosed()) {
-		                statement.close();
+		            if ((statement != null) && !statement.isClosed()) {
+		                statement.close(); //TODO handle exception
 		            }
 		        }
 	        }
@@ -160,8 +160,8 @@ public class Database {
 		        } finally {
 		            connection.setAutoCommit(true);
 
-		            if (statement != null && !statement.isClosed()) {
-		                statement.close();
+		            if ((statement != null) && !statement.isClosed()) {
+		                statement.close(); //TODO handle exception
 		            }
 		        }
 	        }
@@ -178,8 +178,8 @@ public class Database {
 		        } finally {
 		            connection.setAutoCommit(true);
 
-		            if (statement != null && !statement.isClosed()) {
-		                statement.close();
+		            if ((statement != null) && !statement.isClosed()) {
+		                statement.close(); //TODO handle exception
 		            }
 		        }
 	        }
@@ -196,8 +196,8 @@ public class Database {
 		        } finally {
 		            connection.setAutoCommit(true);
 
-		            if (statement != null && !statement.isClosed()) {
-		                statement.close();
+		            if ((statement != null) && !statement.isClosed()) {
+		                statement.close(); //TODO handle exception
 		            }
 		        }
 	        }
@@ -214,15 +214,15 @@ public class Database {
 		        } finally {
 		            connection.setAutoCommit(true);
 
-		            if (statement != null && !statement.isClosed()) {
-		                statement.close();
+		            if ((statement != null) && !statement.isClosed()) {
+		                statement.close(); //TODO handle exception
 		            }
 		        }
 	        }
 	    }
 
 	    
-	    public boolean doesPlayerExist(String uuid) {
+	    boolean doesPlayerExist(String uuid) {
 	        if (!checkConnection()) {
 	            return false;
 	        }
@@ -232,13 +232,12 @@ public class Database {
 	        ResultSet resultSet = null;
 
 	        try {
-	            StringBuilder queryBuilder = new StringBuilder();
-	            queryBuilder.append("SELECT Count(`player_id`) ");
-	            queryBuilder.append("FROM `swreloaded_player` ");
-	            queryBuilder.append("WHERE `uuid` = ? ");
-	            queryBuilder.append("LIMIT 1;");
+				String queryBuilder = "SELECT Count(`player_id`) " +
+						"FROM `swreloaded_player` " +
+						"WHERE `uuid` = ? " +
+						"LIMIT 1;";
 
-	            preparedStatement = connection.prepareStatement(queryBuilder.toString());
+				preparedStatement = connection.prepareStatement(queryBuilder);
 	            preparedStatement.setString(1, uuid);
 	            resultSet = preparedStatement.executeQuery();
 
@@ -268,7 +267,7 @@ public class Database {
 	        return count > 0;
 	    }
 
-	    public void createNewPlayer(String uid) {
+	    void createNewPlayer(String uid) {
 	        if (!checkConnection()) {
 	            return;
 	        }
@@ -277,13 +276,12 @@ public class Database {
 	        PreparedStatement preparedStatement = null;
 
 	        try {
-	            StringBuilder queryBuilder = new StringBuilder();
-	            queryBuilder.append("INSERT INTO `swreloaded_player` ");
-	            queryBuilder.append("(`player_id`, `uuid`, `playername`, `first_seen`, `last_seen`) ");
-	            queryBuilder.append("VALUES ");
-	            queryBuilder.append("(NULL, ?, ?, NOW(), NOW());");
+				String queryBuilder = "INSERT INTO `swreloaded_player` " +
+						"(`player_id`, `uuid`, `playername`, `first_seen`, `last_seen`) " +
+						"VALUES " +
+						"(NULL, ?, ?, NOW(), NOW());";
 
-	            preparedStatement = connection.prepareStatement(queryBuilder.toString());
+				preparedStatement = connection.prepareStatement(queryBuilder);
 	            preparedStatement.setString(1, uid);
 	            preparedStatement.setString(2, SkyWarsReloaded.get().getServer().getPlayer(uuid).getName());
 	            preparedStatement.executeUpdate();

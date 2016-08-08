@@ -1,15 +1,15 @@
 package com.walrusone.skywars.utilities;
 
+import com.walrusone.skywars.SkyWarsReloaded;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.walrusone.skywars.SkyWarsReloaded;
-
 public class SaveDefaultMaps {
 
 	public static void saveDefaultMaps() {
-		ArrayList<String> maps = new ArrayList<String>();
+		ArrayList<String> maps = new ArrayList<>();
         maps.add("caves.zip");
         for (String map: maps) {
         	SkyWarsReloaded.get().saveResource(map, true);
@@ -22,7 +22,7 @@ public class SaveDefaultMaps {
     			e.printStackTrace();
     		}
             File delete = new File(input);
-            delete.delete();
+            delete.delete(); //TODO check for completion
         }
 	}
 }

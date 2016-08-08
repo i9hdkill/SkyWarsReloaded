@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.utilities.Messaging;
 import com.walrusone.skywars.utilities.ParticleItem;
-
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -39,7 +38,7 @@ public class ParticleController {
 
             if (storage.contains("effects")) {
                 for (String item : storage.getStringList("effects")) {
-                    List<String> itemData = new LinkedList<String>(Arrays.asList(item.split(" ")));
+                    List<String> itemData = new LinkedList<>(Arrays.asList(item.split(" ")));
 
                     int cost = Integer.parseInt(itemData.get(1));
         

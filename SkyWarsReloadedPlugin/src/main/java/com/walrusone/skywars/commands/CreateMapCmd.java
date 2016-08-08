@@ -1,18 +1,17 @@
 package com.walrusone.skywars.commands;
 
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.utilities.Messaging;
 
+class CreateMapCmd extends BaseCmd {
 
-public class CreateMapCmd extends BaseCmd {
-
-	public CreateMapCmd() {
+	CreateMapCmd() {
 		forcePlayer = false;
 		cmdName = "create";
 		argLength = 2; //counting cmdName

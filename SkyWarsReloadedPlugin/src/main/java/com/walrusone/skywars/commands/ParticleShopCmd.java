@@ -1,15 +1,14 @@
 package com.walrusone.skywars.commands;
 
-import org.bukkit.Location;
-
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GamePlayer;
 import com.walrusone.skywars.menus.BuyEffectMenu;
 import com.walrusone.skywars.utilities.Messaging;
+import org.bukkit.Location;
 
-public class ParticleShopCmd extends BaseCmd { 	
+class ParticleShopCmd extends BaseCmd {
 	
-	public ParticleShopCmd() {
+	ParticleShopCmd() {
 		forcePlayer = true;
 		cmdName = "particleshop";
 		argLength = 1; //counting cmdName

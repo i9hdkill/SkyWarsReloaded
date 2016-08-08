@@ -1,109 +1,83 @@
 package com.walrusone.skywars.menus;
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.walrusone.skywars.SkyWarsReloaded;
+import com.walrusone.skywars.game.Game;
+import com.walrusone.skywars.game.Game.GameState;
+import com.walrusone.skywars.game.GamePlayer;
+import com.walrusone.skywars.utilities.IconMenu;
+import com.walrusone.skywars.utilities.Messaging;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.google.common.collect.Lists;
-import com.walrusone.skywars.SkyWarsReloaded;
-import com.walrusone.skywars.game.Game;
-import com.walrusone.skywars.game.GamePlayer;
-import com.walrusone.skywars.game.Game.GameState;
-import com.walrusone.skywars.utilities.IconMenu;
-import com.walrusone.skywars.utilities.Messaging;
+import java.util.List;
 
-public class ChestMenu {
+class ChestMenu {
 
 	 private static final int menuSlotsPerRow = 9;
 	 private static final int menuSize = 36;
 	 private static final String menuName = new Messaging.MessageFormatter().format("menu.chest-menu-title");
   
-    public ChestMenu(final GamePlayer gamePlayer) {
+    ChestMenu(final GamePlayer gamePlayer) {
 
     	int rowCount = menuSlotsPerRow;
         while (rowCount < 36 && rowCount < menuSize) {
             rowCount += menuSlotsPerRow;
         }
 
-        SkyWarsReloaded.getIC().create(gamePlayer.getP(), menuName, rowCount, new IconMenu.OptionClickEventHandler() {
-            @Override
-            public void onOptionClick(IconMenu.OptionClickEvent event) {    
-            	String vote = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', event.getName()));
+        SkyWarsReloaded.getIC().create(gamePlayer.getP(), menuName, rowCount, event -> {
+            String vote = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', event.getName()));
 
-                event.setWillClose(false);
-                event.setWillDestroy(false);
-                
-                if (gamePlayer.getGame().getState() != GameState.PREGAME) {
-                	return;
+            event.setWillClose(false);
+            event.setWillDestroy(false);
+
+            if (gamePlayer.getGame().getState() != GameState.PREGAME) {
+                return;
+            }
+
+            if (!hasChestPermission(event.getPlayer())) {
+                return;
+            }
+
+            int lastVote = gamePlayer.getOpVote();
+
+            if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.chest-basic"))))) {
+                 gamePlayer.setOpVote(1);
+                gamePlayer.getP().closeInventory();
+                if (gamePlayer.getGame().getState() == GameState.PREGAME) {
+                    SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new MainMenu(gamePlayer), 2);
                 }
-                
-            	if (!hasChestPermission(event.getPlayer())) {
-                    return;
-            	} 
-            	
-                int lastVote = gamePlayer.getOpVote();
-                
-                if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.chest-basic"))))) {
-                 	gamePlayer.setOpVote(1);
-                	gamePlayer.getP().closeInventory();
-                	if (gamePlayer.getGame().getState() == GameState.PREGAME) {
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new MainMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	}
-                } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.chest-normal"))))) {
-                	gamePlayer.setOpVote(2);
-                	gamePlayer.getP().closeInventory();
-                	if (gamePlayer.getGame().getState() == GameState.PREGAME) {
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new MainMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	}
-                } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.chest-op"))))) {
-                	gamePlayer.setOpVote(3);
-                	gamePlayer.getP().closeInventory();
-                	if (gamePlayer.getGame().getState() == GameState.PREGAME) {
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new MainMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	}
-                } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.return-to-options"))))) {
-                	gamePlayer.getP().closeInventory();
-                	if (gamePlayer.getGame().getState() == GameState.PREGAME) {
-                    	SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), new Runnable() {
-    						@Override
-    						public void run() {
-    		                	new MainMenu(gamePlayer);
-    						}
-                    	}, 2);
-                	}
+            } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.chest-normal"))))) {
+                gamePlayer.setOpVote(2);
+                gamePlayer.getP().closeInventory();
+                if (gamePlayer.getGame().getState() == GameState.PREGAME) {
+                    SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new MainMenu(gamePlayer), 2);
                 }
-                
-                if (gamePlayer.getOpVote() != lastVote) {
-                	Game game = gamePlayer.getGame();
-                	for (GamePlayer gPlayer: game.getPlayers()) {
-                		if (gPlayer.getP() != null) {
-                    		gPlayer.getP().sendMessage(new Messaging.MessageFormatter()
-        					.withPrefix()
-        					.setVariable("player", gamePlayer.getName())
-        					.setVariable("type", vote.toUpperCase())
-        					.format("game.voted-for-chests"));
-                		}
-                	}
-                	game.playSound(SkyWarsReloaded.getCfg().getChestVoteSound());
-                } 
+            } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.chest-op"))))) {
+                gamePlayer.setOpVote(3);
+                gamePlayer.getP().closeInventory();
+                if (gamePlayer.getGame().getState() == GameState.PREGAME) {
+                    SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new MainMenu(gamePlayer), 2);
+                }
+            } else if (vote.equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Messaging.MessageFormatter().format("menu.return-to-options"))))) {
+                gamePlayer.getP().closeInventory();
+                if (gamePlayer.getGame().getState() == GameState.PREGAME) {
+                    SkyWarsReloaded.get().getServer().getScheduler().scheduleSyncDelayedTask(SkyWarsReloaded.get(), () -> new MainMenu(gamePlayer), 2);
+                }
+            }
+
+            if (gamePlayer.getOpVote() != lastVote) {
+                Game game = gamePlayer.getGame();
+				game.getPlayers().stream().filter(gPlayer -> gPlayer.getP() != null).forEach(gPlayer -> {
+					gPlayer.getP().sendMessage(new Messaging.MessageFormatter()
+							.withPrefix()
+							.setVariable("player", gamePlayer.getName())
+							.setVariable("type", vote.toUpperCase())
+							.format("game.voted-for-chests"));
+				});
+                game.playSound(SkyWarsReloaded.getCfg().getChestVoteSound());
             }
         });
 
@@ -159,7 +133,7 @@ public class ChestMenu {
     	}
     }
     
-    public boolean hasChestPermission(Player player) {
+    private boolean hasChestPermission(Player player) {
         return player.isOp() || player.hasPermission("swr.opchest");
     }
 }
