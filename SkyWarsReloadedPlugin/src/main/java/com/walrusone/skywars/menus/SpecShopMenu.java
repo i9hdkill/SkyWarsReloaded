@@ -3,7 +3,6 @@ package com.walrusone.skywars.menus;
 import com.google.common.collect.Lists;
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.GamePlayer;
-import com.walrusone.skywars.utilities.IconMenu;
 import com.walrusone.skywars.utilities.Messaging;
 import com.walrusone.skywars.utilities.ShopItem;
 import org.bukkit.ChatColor;

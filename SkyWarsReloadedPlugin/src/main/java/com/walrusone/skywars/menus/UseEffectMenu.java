@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.walrusone.skywars.SkyWarsReloaded;
 import com.walrusone.skywars.game.Game.GameState;
 import com.walrusone.skywars.game.GamePlayer;
-import com.walrusone.skywars.utilities.IconMenu;
 import com.walrusone.skywars.utilities.Messaging;
 import com.walrusone.skywars.utilities.ParticleItem;
 import org.bukkit.ChatColor;
