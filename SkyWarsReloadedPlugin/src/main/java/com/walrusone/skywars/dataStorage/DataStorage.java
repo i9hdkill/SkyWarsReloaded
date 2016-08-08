@@ -526,19 +526,17 @@ public class DataStorage {
 		}
 	}
 	
-	private void copyDefaults(File playerFile) {
-        FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(playerFile);
+	public static void copyDefaults(File file) {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 		Reader defConfigStream = new InputStreamReader(SkyWarsReloaded.get().getResource("playerFile.yml"));
-		if (defConfigStream != null) {
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			playerConfig.options().copyDefaults(true);
-			playerConfig.setDefaults(defConfig);
-			try {
-				playerConfig.save(playerFile);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+		config.options().copyDefaults(true);
+		config.setDefaults(defConfig);
+		try {
+			config.save(file);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+
 	}
 }

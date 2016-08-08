@@ -3,11 +3,13 @@ package com.walrusone.skywars.utilities;
 import com.google.common.collect.Maps;
 import com.walrusone.skywars.SkyWarsReloaded;
 
+import com.walrusone.skywars.dataStorage.DataStorage;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,7 +30,7 @@ public final class Messaging {
             plugin.saveResource("messages.yml", false);
         }
 
-        copyDefaults(storageFile);
+        DataStorage.copyDefaults(storageFile);
         storage = YamlConfiguration.loadConfiguration(storageFile);
     }
 
@@ -40,7 +42,7 @@ public final class Messaging {
         return COLOR_PATTERN.matcher(input).replaceAll("");
     }
 
-    public String getPrefix() {
+    private String getPrefix() {
         return storage.getString("prefix", "");
     }
 
@@ -83,19 +85,7 @@ public final class Messaging {
                 message = SkyWarsReloaded.getMessaging().getMessage(message);
             }
 
-            Matcher matcher = PATTERN.matcher(message);
-
-            while (matcher.find()) {
-                String variable = matcher.group();
-                variable = variable.substring(1, variable.length() - 1);
-
-                String value = variableMap.get(variable);
-                if (value == null) {
-                    value = "";
-                }
-
-                message = message.replaceFirst(Pattern.quote(matcher.group()), Matcher.quoteReplacement(value));
-            }
+            message = matcherReplace(message);
 
             if (prefix) {
                 message = SkyWarsReloaded.getMessaging().getPrefix() + message;
@@ -113,6 +103,16 @@ public final class Messaging {
                 message = SkyWarsReloaded.getMessaging().getMessage(message);
             }
 
+            message = matcherReplace(message);
+
+            if (prefix) {
+                message = SkyWarsReloaded.getMessaging().getPrefix() + message;
+            }
+
+            return message;
+        }
+
+        private String matcherReplace(String message) {
             Matcher matcher = PATTERN.matcher(message);
 
             while (matcher.find()) {
@@ -126,29 +126,8 @@ public final class Messaging {
 
                 message = message.replaceFirst(Pattern.quote(matcher.group()), Matcher.quoteReplacement(value));
             }
-
-            if (prefix) {
-                message = SkyWarsReloaded.getMessaging().getPrefix() + message;
-            }
-
             return message;
         }
     }
-
-	private void copyDefaults(File playerFile) {
-        FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(playerFile);
-		Reader defConfigStream = new InputStreamReader(SkyWarsReloaded.get().getResource("messages.yml"));
-		if (defConfigStream != null) {
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			playerConfig.options().copyDefaults(true);
-			playerConfig.setDefaults(defConfig);
-			try {
-				playerConfig.save(playerFile);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
     
 }
