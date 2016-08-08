@@ -152,7 +152,7 @@ public class ItemUtils {
      	return !itemStack.getEnchantments().isEmpty();
     }
     
-	public static Color getColor(String c) {
+	private static Color getColor(String c) {
 		switch (c) {
 		case "aqua": return Color.AQUA;
 		case "black": return Color.BLACK;
@@ -163,7 +163,7 @@ public class ItemUtils {
 		case "lime": return Color.LIME;
 		case "maroon": return Color.MAROON;
 		case "navy": return Color.NAVY;
-		case "olvie": return Color.OLIVE;
+		case "olive": return Color.OLIVE;
 		case "orange": return Color.ORANGE;
 		case "purple": return Color.PURPLE;
 		case "red": return Color.RED;
@@ -183,7 +183,7 @@ public class ItemUtils {
         }
 
         if (lores.length > 0) {
-            List<String> loreList = new ArrayList<String>(lores.length);
+            List<String> loreList = new ArrayList<>(lores.length);
 
             for (String lore : lores) {
                 loreList.add(ChatColor.translateAlternateColorCodes('&', lore));
