@@ -79,18 +79,13 @@ public class IconMenu {
         }
 
 
-        OptionClickEvent clickEvent = new OptionClickEvent((Player) event.getWhoClicked(), slot, optionNames[slot]);
+        OptionClickEvent clickEvent = new OptionClickEvent((Player) event.getWhoClicked(), optionNames[slot]);
         handler.onOptionClick(clickEvent);
 
         if (clickEvent.willClose()) {
             final Player player = (Player) event.getWhoClicked();
 
-            Bukkit.getScheduler().runTaskLater(SkyWarsReloaded.get(), new Runnable() {
-                @Override
-                public void run() {
-                    player.closeInventory();
-                }
-            }, 1L);
+            Bukkit.getScheduler().runTaskLater(SkyWarsReloaded.get(), player::closeInventory, 1L);
         }
 
         if (clickEvent.willDestroy()) {
@@ -109,14 +104,12 @@ public class IconMenu {
     public static class OptionClickEvent {
 
         private Player player;
-        private int position;
         private String name;
         private boolean close;
         private boolean destroy;
 
-        public OptionClickEvent(Player player, int position, String name) {
+        public OptionClickEvent(Player player, String name) {
             this.player = player;
-            this.position = position;
             this.name = name;
             this.close = false;
             this.destroy = false;
@@ -126,19 +119,15 @@ public class IconMenu {
             return this.player;
         }
 
-        public int getPosition() {
-            return this.position;
-        }
-
         public String getName() {
             return this.name;
         }
 
-        public boolean willClose() {
+        boolean willClose() {
             return this.close;
         }
 
-        public boolean willDestroy() {
+        boolean willDestroy() {
             return this.destroy;
         }
 
@@ -151,8 +140,7 @@ public class IconMenu {
         }
     }
 
-    public static abstract interface OptionClickEventHandler {
-
-        public abstract void onOptionClick(IconMenu.OptionClickEvent event);
+    public interface OptionClickEventHandler {
+        void onOptionClick(IconMenu.OptionClickEvent event);
     }
 }
