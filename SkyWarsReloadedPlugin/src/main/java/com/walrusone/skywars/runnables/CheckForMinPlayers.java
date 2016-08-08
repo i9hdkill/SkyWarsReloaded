@@ -7,9 +7,7 @@ public class CheckForMinPlayers implements Runnable {
 
 	@Override
 	public void run() {
-		for(Game game: SkyWarsReloaded.getGC().getGames()) {
-    		game.prepareForStart();
-    	}
+		SkyWarsReloaded.getGC().getGames().forEach((Game::prepareForStart));
 	}
 
 }

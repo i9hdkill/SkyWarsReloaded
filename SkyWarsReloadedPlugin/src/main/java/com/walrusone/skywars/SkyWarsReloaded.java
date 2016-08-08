@@ -166,64 +166,62 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
         
         getCommand("swr").setExecutor(new CmdManager());
 
-        getCommand("global").setExecutor(new CommandExecutor() {
-            public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-            	boolean hasPerm = false;
-        		if (!(sender instanceof Player)) {
-        			hasPerm = true;
-        		} else {
-        			Player player = (Player) sender;
-        			if (player.hasPermission("swr.global")) {
-        				hasPerm = true;
-        			} else {
-            			sender.sendMessage(new Messaging.MessageFormatter().format("error.cmd-no-perm"));
-        			}
-        		}
-        		if (hasPerm) {
-                    if (args.length == 0) {
-                        sender.sendMessage("\247cUsage: /" + label + " <message>");
-                        return true;
-                    }
-
-                    Player player = (Player) sender; //TODO fix possible ClassCastException
-                    StringBuilder messageBuilder = new StringBuilder();
-                    for (String arg : args) {
-                        messageBuilder.append(arg);
-                        messageBuilder.append(" ");
-                    }
-                    
-                    GamePlayer gPlayer = SkyWarsReloaded.getPC().getPlayer(player.getUniqueId());
-                	String name = player.getDisplayName();
-                	String prefix = "";
-                	if (chat != null && SkyWarsReloaded.chat.getPlayerPrefix(gPlayer.getP()) != null) {
-                        	prefix = SkyWarsReloaded.chat.getPlayerPrefix(gPlayer.getP());
-                	}
-                	String colorMessage = ChatColor.translateAlternateColorCodes('&', messageBuilder.toString());
-                 	String message;
-                	if (gPlayer.getP().hasPermission("swr.color")) {
-                    		message = colorMessage;
-                	} else {
-                		message = ChatColor.stripColor(colorMessage);
-                	}
-                	int scoreValue = gPlayer.getScore();
-                	String score;
-                	if (scoreValue < 0) {
-                        score = ChatColor.RED + "(" + gPlayer.getScore() + ")";
-                	} else {
-                		score = ChatColor.GREEN + "(+" + gPlayer.getScore() + ")";
-                	}
-            		Bukkit.broadcastMessage(new Messaging.MessageFormatter()
-            			.setVariable("score", score)
-            			.setVariable("prefix", prefix)
-            			.setVariable("player", name)
-            			.setVariable("message", message)
-            			.format("globalchat"));
-
+        getCommand("global").setExecutor((sender, command, label, args) -> {
+            boolean hasPerm = false;
+            if (!(sender instanceof Player)) {
+                hasPerm = true;
+            } else {
+                Player player = (Player) sender;
+                if (player.hasPermission("swr.global")) {
+                    hasPerm = true;
+                } else {
+                    sender.sendMessage(new Messaging.MessageFormatter().format("error.cmd-no-perm"));
+                }
+            }
+            if (hasPerm) {
+                if (args.length == 0) {
+                    sender.sendMessage("\247cUsage: /" + label + " <message>"); //TODO what is \246c?
                     return true;
                 }
-				return true;
-        		}
-        });
+
+                Player player = (Player) sender; //TODO fix possible ClassCastException
+                StringBuilder messageBuilder = new StringBuilder();
+                for (String arg : args) {
+                    messageBuilder.append(arg);
+                    messageBuilder.append(" ");
+                }
+
+                GamePlayer gPlayer = SkyWarsReloaded.getPC().getPlayer(player.getUniqueId());
+                String name = player.getDisplayName();
+                String prefix = "";
+                if (chat != null && SkyWarsReloaded.chat.getPlayerPrefix(gPlayer.getP()) != null) {
+                        prefix = SkyWarsReloaded.chat.getPlayerPrefix(gPlayer.getP());
+                }
+                String colorMessage = ChatColor.translateAlternateColorCodes('&', messageBuilder.toString());
+                 String message;
+                if (gPlayer.getP().hasPermission("swr.color")) {
+                        message = colorMessage;
+                } else {
+                    message = ChatColor.stripColor(colorMessage);
+                }
+                int scoreValue = gPlayer.getScore();
+                String score1;
+                if (scoreValue < 0) {
+                    score1 = ChatColor.RED + "(" + gPlayer.getScore() + ")";
+                } else {
+                    score1 = ChatColor.GREEN + "(+" + gPlayer.getScore() + ")";
+                }
+                Bukkit.broadcastMessage(new Messaging.MessageFormatter()
+                    .setVariable("score", score1)
+                    .setVariable("prefix", prefix)
+                    .setVariable("player", name)
+                    .setVariable("message", message)
+                    .format("globalchat"));
+
+                return true;
+            }
+            return true;
+            });
         
         if (config.daylightCycleDisabled()) {
 			Location spawn = SkyWarsReloaded.getCfg().getSpawn();
